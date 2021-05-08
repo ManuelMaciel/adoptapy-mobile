@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text } from 'react-native'
+import { Button, ThemeProvider } from 'react-native-elements';
 
 const AdoptionCreateScreen = () => {
   return (
-    <View>
-      <Text>AdoptionCreate</Text>
-    </View>
+    <ThemeProvider>
+      <Button title="Hey!" />
+    </ThemeProvider>
   )
 }
 
