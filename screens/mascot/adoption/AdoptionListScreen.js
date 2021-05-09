@@ -1,11 +1,22 @@
 import React from 'react';
-import { View, Text } from 'react-native'
+import { View, TextInput, Button, ScrollView, StyleSheet } from 'react-native'
 
 const AdoptionListScreen = () => {
   return (
-    <View>
-      <Text>AdoptionList</Text>
-    </View>
+    <ScrollView>
+      <View>
+        <TextInput placeholder='Nombre de la mascota' />
+      </View>
+      <View>
+        <TextInput placeholder='Raza de la mascota' />
+      </View>
+      <View>
+        <TextInput placeholder='Edad de la mascota' />
+      </View>
+      <View>
+        <Button title='Guardar Mascota' />
+      </View>
+    </ScrollView>
   )
 }
 
