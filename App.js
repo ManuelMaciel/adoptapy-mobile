@@ -1,29 +1,25 @@
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack'
+import { StyleSheet, Text, View } from 'react-native';
+// My Componentes Import
+import OnBoarding from './components/SliderMenu/OnBoarding'
 
-const Stack = createStackNavigator();
-
-import AdoptionCreate from './screens/mascot/adoption/AdoptionCreateScreen';
-import AdoptionList from './screens/mascot/adoption/AdoptionListScreen';
-import AdoptionDetails from './screens/mascot/adoption/AdoptionDetailsScreen';
-
-function MyStack() {
+const App = () => {
   return (
-    <SafeAreaProvider>
-      <Stack.Navigator>
-        <Stack.Screen name='AdoptionCreate' component={AdoptionCreate} />
-        <Stack.Screen name='AdoptionList' component={AdoptionList} />
-        <Stack.Screen name='AdoptionDetails' component={AdoptionDetails} />
-      </Stack.Navigator>
-    </SafeAreaProvider>
-  )
-}
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <MyStack />
-    </NavigationContainer>
+    <View style={styles.container}>
+      <OnBoarding />
+      <StatusBar style='auto'/>
+    </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+export default App
