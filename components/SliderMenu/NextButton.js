@@ -3,6 +3,8 @@ import { View, TouchableOpacity, StyleSheet, Animated} from 'react-native';
 import Svg, { G, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
+// config settings
+import config from '../../utils/config';
 
 const NextButton = ({ percentage, scrollTo }) => {
   
@@ -56,7 +58,7 @@ const NextButton = ({ percentage, scrollTo }) => {
           origin={center}
         >
           <Circle
-            stroke='#C5F0F5'
+            stroke={config.colorBtnCircle}
             cx={center}
             cy={center}
             r={radius}
@@ -64,7 +66,7 @@ const NextButton = ({ percentage, scrollTo }) => {
           />
           <Circle
             ref={progressRef}
-            stroke='#068792'
+            stroke={config.colorTitle}
             cx={center}
             cy={center}
             r={radius}
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'absolute',
-    backgroundColor: '#068792',
+    backgroundColor: config.colorTitle,
     borderRadius: 100,
     padding: 20,
   },

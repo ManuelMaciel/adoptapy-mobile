@@ -24,7 +24,7 @@ const OnBoarding = ({ navigation }) => {
     if(currentIndex < slides.length -1) {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 })
     } else {
-      navigation.navigate('Home');
+      navigation.navigate('TabStack', {screen: 'HomeScreen'});
       try {
         await AsyncStorage.setItem('@viewedOnBoarding', 'true');
       } catch (error) {

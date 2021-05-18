@@ -7,8 +7,8 @@ const App = () => {
 
   return (
     <> 
-    <StatusBar style='dark' />
-    <ScreenStack />
+      <StatusBar style='dark' />
+      <ScreenStack />
     </>
   );
 
