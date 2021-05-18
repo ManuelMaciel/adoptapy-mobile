@@ -3,8 +3,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 // Screens 
-import OnBoardingScreen from './screens/OnBoardingScreen'
-import HomeScreen from './screens/HomeScreen'
+import OnBoardingScreen from './OnBoardingScreen'
+import HomeScreen from './HomeScreen'
 
 const Stack = createStackNavigator();
 
@@ -15,8 +15,8 @@ const Stack = createStackNavigator();
 function AppStack() {
   return (
     <Stack.Navigator headerMode='none'>
-      <Stack.Screen name='onBoarding' component={OnBoardingScreen}/>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name='OnBoarding' component={OnBoardingScreen}/>
+      <Stack.Screen name='Home' component={HomeScreen} />
     </Stack.Navigator>
   )
 }

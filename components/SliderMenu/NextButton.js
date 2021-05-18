@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import { View, TouchableOpacity, StyleSheet, Animated} from 'react-native';
 import Svg, { G, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'; 
 
 const NextButton = ({ percentage, scrollTo }) => {
   
-  const size = 128;
+  const size = 99;
   const strokeWidth = 2;
   const center = size / 2;
   const radius = size / 2 - strokeWidth / 2;
@@ -74,7 +75,8 @@ const NextButton = ({ percentage, scrollTo }) => {
       </Svg>
 
       <TouchableOpacity onPress={scrollTo} style={styles.button} activeOpacity={0.6}>
-        <AntDesign name='arrowright' size={32}  color='#fff'/>
+        {/* <AntDesign name='arrowright' size={32}  color='#fff'/> */}
+        <MaterialIcons name='pets' size={32} color='#fff' />
       </TouchableOpacity>
     </View>
   )

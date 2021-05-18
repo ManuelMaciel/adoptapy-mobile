@@ -5,9 +5,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import OnBoardingItems from './OnBoardingItems';
 import Paginator from './Paginator';
 import NextButton from './NextButton'
-import slides from '../../slides';
+import slides from '../../utils/slides';
 
-const OnBoarding = () => {
+const OnBoarding = ({ navigation }) => {
+
+  // const navigation = useNavigation();
+
   const [ currentIndex, setCurrentIndex ] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null)
@@ -21,6 +24,7 @@ const OnBoarding = () => {
     if(currentIndex < slides.length -1) {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 })
     } else {
+      navigation.navigate('Home');
       try {
         await AsyncStorage.setItem('@viewedOnBoarding', 'true');
       } catch (error) {

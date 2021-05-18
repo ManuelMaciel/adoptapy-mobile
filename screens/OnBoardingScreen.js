@@ -5,8 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 // My Componentes Import
 import OnBoarding from '../components/SliderMenu/OnBoarding'
 import HomeScreen from './HomeScreen';
-
-
+// React Navigations
+import { useNavigation } from '@react-navigation/native';
 const Loading = () => {
   return (
   <View>
@@ -17,6 +17,8 @@ const Loading = () => {
 
 
 const OnBoardingScreen = () => {
+
+  const navigation = useNavigation();
 
   const checkOnBoarding = async () => {
     try {
@@ -43,7 +45,7 @@ const OnBoardingScreen = () => {
     <> 
     <StatusBar style='dark' />
     <View style={styles.container}>
-      { loading ? <Loading /> : viewedOnBoarding ? <HomeScreen /> : <OnBoarding /> }
+      { loading ? <Loading /> : viewedOnBoarding ? <HomeScreen /> : <OnBoarding navigation={navigation} /> }
     </View>
     </>
   );

@@ -13,7 +13,7 @@ const OnBoardingItems = ({item}) => {
       {/* Text, Description Content */}
       <View style={{ flex: 0.3 }}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <Text style={[styles.description, {width, resizeMode: 'contain'}]}>{item.description}</Text>
       </View>
     </View>
   );
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    flex: 0.7,
+    flex: 0.6,
     justifyContent: 'center',
   },
   title: {
@@ -38,8 +38,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   description: {
-    fontWeight: '300',
+    fontWeight: '400',
     color: '#62656b',
+    fontSize: 15,
     textAlign: 'center',
     paddingHorizontal: 64,
   },
