@@ -10,13 +10,11 @@ import AdoptionDetails from './screens/mascot/adoption/AdoptionDetailsScreen';
 
 function MyStack() {
   return (
-    <SafeAreaProvider>
-      <Stack.Navigator>
-        <Stack.Screen name='AdoptionCreate' component={AdoptionCreate} />
-        <Stack.Screen name='AdoptionList' component={AdoptionList} />
-        <Stack.Screen name='AdoptionDetails' component={AdoptionDetails} />
-      </Stack.Navigator>
-    </SafeAreaProvider>
+    <Stack.Navigator>
+      <Stack.Screen name='AdoptionCreate' component={AdoptionCreate} />
+      <Stack.Screen name='AdoptionList' component={AdoptionList} />
+      <Stack.Screen name='AdoptionDetails' component={AdoptionDetails} />
+    </Stack.Navigator>
   )
 }
 
