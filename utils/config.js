@@ -7,4 +7,5 @@ export default {
   colorBtn: '#8f2bbc',
   colorBtnCircle: '#C4C1F7',
   colorIcon: '#F50057',
+  colorNoFocused: '#9FABB5',
 }    
