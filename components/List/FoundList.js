@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native'
 
-const FoundListScreen = () => {
+const FoundList = () => {
   return (
     <View>
       <Text>Found List</Text>
@@ -9,4 +9,4 @@ const FoundListScreen = () => {
   )
 }
 
-export default FoundListScreen
+export default FoundList

@@ -4,7 +4,7 @@ import { View, Text } from 'react-native'
 const LostListScreen = () => {
   return (
     <View>
-      <Text>LostList</Text>
+      <Text>Lost List</Text>
     </View>
   )
 }

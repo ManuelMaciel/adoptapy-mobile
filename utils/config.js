@@ -8,4 +8,5 @@ export default {
   colorBtnCircle: '#C4C1F7',
   colorIcon: '#F50057',
   colorNoFocused: '#9FABB5',
+  white: '#F8F8FF'
 }    

@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text } from 'react-native'
 
-const FoundListScreen = () => {
+const LostList = () => {
   return (
     <View>
-      <Text>Found List</Text>
+      <Text>Lost List</Text>
     </View>
   )
 }
 
-export default FoundListScreen
+export default LostList

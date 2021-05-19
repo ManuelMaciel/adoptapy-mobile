@@ -7,6 +7,7 @@ import OnBoarding from '../components/SliderMenu/OnBoarding'
 import HomeScreen from './HomeScreen';
 // React Navigations
 import { useNavigation } from '@react-navigation/native';
+
 const Loading = () => {
   return (
   <View>
@@ -14,7 +15,6 @@ const Loading = () => {
   </View>
   )
 }
-
 
 const OnBoardingScreen = () => {
 

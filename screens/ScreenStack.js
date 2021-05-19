@@ -1,22 +1,22 @@
-import React, { useRef } from 'react';
+import React from 'react';
 // React Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Dimensions, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // FontAwesome5 Icons
 import { FontAwesome5 } from '@expo/vector-icons'; 
 // config
-import config from '../utils/config'
+import config from '../utils/config';
 // Main App Screens Stack
-import OnBoardingScreen from './OnBoardingScreen'
-import HomeScreen from './HomeScreen'
+import OnBoardingScreen from './OnBoardingScreen';
+import HomeScreen from './HomeScreen';
+import MainScreen from './MainScreen';
 // New Post Screen
 import NewPosts from './NewPost';
 // Shelters Screen
 import Shelters from './Shelters';
-
 // Stack Navigator
 const Stack = createStackNavigator();
 
@@ -31,7 +31,7 @@ function OnBoardingScreenStack() {
 function MainScreenStack() {
   return (
     <Stack.Navigator headerMode='none'>
-      <Stack.Screen name='Home' component={HomeScreen} />
+      <Stack.Screen name='Home' component={MainScreen} />
     </Stack.Navigator>
   )
 }
@@ -113,11 +113,13 @@ function TabStack() {
   )
 }
 // Stack Navigation With OnBoardingScreen
-function AppStack() {
+const AppStack = () => {
   return (
     <Stack.Navigator headerMode='none'>
-      <Stack.Screen name='OnBoardingScreenStack' component={OnBoardingScreenStack} />
-      <Stack.Screen name='TabStack' component={TabStack} />
+      
+      <Stack.Screen name='TabStack' component={TabStack} /> 
+      <Stack.Screen name='OnBoardingScreenStack' component={OnBoardingScreenStack} /> 
+      
     </Stack.Navigator>
   )
 }
