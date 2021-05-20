@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Button, ScrollView, StyleSheet, ActivityIndicator, Dimensions } from 'react-native'
+import { View, Text, Button, ScrollView, StyleSheet, ActivityIndicator, Dimensions, TouchableOpacity } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler';
+// Axios
 import axios from 'axios';
+// config
+import config from '../../utils/config';
+// FontAwesome5 Icons
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
 const Loading = () => {
   return (
@@ -39,7 +44,13 @@ const AdoptionList = () => {
     console.log(item)
     return (
       <View style={styles.card}>
-        <Text>{item.petData.petName}</Text>
+        <TouchableOpacity onPress={() => alert('Hola humano')}>
+          <FontAwesome5 style={{alignItems: 'flex-start'}} name='dog' size={15} color={config.colorTitle} />
+          <Text>{item.petData.petName}</Text>
+          <Text>{item.petData.petSex}</Text>
+          <Text>{item.petData.petSize}</Text>
+          <Text>{item.petData.petCity}</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -48,18 +59,20 @@ const AdoptionList = () => {
     <>
       {loading ? <Loading /> 
       :
-      <FlatList 
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          marginTop: 10,
-          paddingBottom: 50,
-        }}
-        data={Object.values(data)}
-        numColumns={2}
-        renderItem={Card}
-        keyExtractor={( item ) => item._id.toString()}
-      />
+      <View >
+        <FlatList 
+          columnWrapperStyle={{ justifyContent: 'space-between' }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            marginTop: 10,
+            paddingBottom: 50,
+          }}
+          data={Object.values(data)}
+          numColumns={2}
+          renderItem={Card}
+          keyExtractor={( item ) => item._id.toString()}
+        />
+      </View>
       }
     </>
   )
@@ -68,12 +81,12 @@ const AdoptionList = () => {
 const styles = StyleSheet.create({
   card: {
     height: 250,
-    backgroundColor: 'gray',
+    backgroundColor: config.colorBackground,
     width,
     marginHorizontal: 2,
     borderRadius: 10,
     marginBottom: 20,
-    padding: 15
+    padding: 15,
   }
 })
 

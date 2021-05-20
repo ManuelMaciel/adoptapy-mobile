@@ -65,8 +65,8 @@ function TabStack() {
           style: {
             backgroundColor: 'white',
             position: 'absolute',
-            bottom: 40,
-            marginHorizontal: 20,
+            // bottom: 40,
+            // marginHorizontal: 20,
             // Max Height...
             height: 60,
             borderRadius: 10,

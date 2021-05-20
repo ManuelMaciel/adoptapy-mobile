@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
   categories: {
     marginTop: 30,
     flexDirection: 'row',
+    marginBottom: 15,
   },
   button: {
     backgroundColor: '#fff',
