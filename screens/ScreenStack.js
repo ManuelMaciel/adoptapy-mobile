@@ -5,14 +5,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// FontAwesome5 Icons
-import { FontAwesome5 } from '@expo/vector-icons'; 
+// MaterialDesign Icons
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+// import { FontAwesome5 } from '@expo/vector-icons'; 
 // config
 import config from '../utils/config';
 // Main App Screens Stack
 import OnBoardingScreen from './OnBoardingScreen';
 import HomeScreen from './HomeScreen';
 import MainScreen from './MainScreen';
+// Pet Details Component
+import PetDetails from '../components/PetDetails/PetDetails'
 // New Post Screen
 import NewPosts from './NewPost';
 // Shelters Screen
@@ -32,6 +35,7 @@ function MainScreenStack() {
   return (
     <Stack.Navigator headerMode='none'>
       <Stack.Screen name='Home' component={MainScreen} />
+      <Stack.Screen name='PetDetails' component={PetDetails} />
     </Stack.Navigator>
   )
 }
@@ -86,7 +90,7 @@ function TabStack() {
             <View
               style={{position: 'absolute'}}
             >
-              <FontAwesome5 name='compass' size={30} color={focused ? config.colorTitle : config.colorNoFocused} />
+              <MaterialCommunityIcons name="compass-outline" size={30} color={focused ? config.colorTitle : config.colorNoFocused} />
             </View>
           )
         }}/>
@@ -95,7 +99,7 @@ function TabStack() {
             <View
               style={{position: 'absolute'}}
             >
-              <FontAwesome5 name='plus' size={35} color={focused ? config.colorTitle : config.colorNoFocused}/>
+              <MaterialCommunityIcons name="heart-plus-outline" size={30} color={focused ? config.colorTitle : config.colorNoFocused} />
             </View>
           )
         }}/>
@@ -104,7 +108,7 @@ function TabStack() {
             <View
               style={{position: 'absolute'}}
             >
-              <FontAwesome5 name='dog' size={30} color={focused ? config.colorTitle : config.colorNoFocused} />
+              <MaterialCommunityIcons name="hand-heart" size={30} color={focused ? config.colorTitle : config.colorNoFocused} />
             </View>
           )
         }}/>

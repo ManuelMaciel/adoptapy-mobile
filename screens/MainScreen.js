@@ -6,6 +6,8 @@ import { FlatList } from 'react-native-gesture-handler';
 import AdoptionList from '../components/List/AdoptionList';
 import FoundList from '../components/List/FoundList';
 import LostList from '../components/List/LostList';
+// React Navigations
+import { useNavigation } from '@react-navigation/native';
 // Material Icons
 import { MaterialIcons } from '@expo/vector-icons';
 // import { FontAwesome5 } from '@expo/vector-icons';
@@ -14,13 +16,15 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import config from '../utils/config';
 
 const MainScreen = () => {
+
+  const navigation = useNavigation();
   
-  const [ petCategoryIndex, setPetCategoryIndex ] = useState(0)
+  const [ petCategoryIndex, setPetCategoryIndex ] = useState('Perro')
 
   const categories = [
     {title: 'Perro', icon: 'dog'},
     {title: 'Gato', icon: 'cat'},
-    {title: 'Otro', icon: 'alien'}
+    {title: 'Otro', icon: 'rabbit'}
   ]
 
   const CategoryList = () => {
@@ -28,14 +32,15 @@ const MainScreen = () => {
       <View style={styles.categories}>
         {categories.map((category, index) => (
           <View style={{ paddingRight: 10}} key={index}>
-            <TouchableOpacity onPress={() => setPetCategoryIndex(index)} style={[styles.button, petCategoryIndex == index && styles.buttonSelected]}>
-              <MaterialCommunityIcons name={category.icon} size={29} color={petCategoryIndex == index ? config.white : config.colorTitle} />
-              <Text style={[styles.buttonText, , petCategoryIndex == index && styles.buttonTextSelected]}>{category.title}</Text>
+            <TouchableOpacity onPress={() => setPetCategoryIndex(category.title)} style={[styles.button, petCategoryIndex == category.title && styles.buttonSelected]}>
+              <MaterialCommunityIcons name={category.icon} size={29} color={petCategoryIndex == category.title ? config.white : config.colorTitle} />
+              <Text style={[styles.buttonText, , petCategoryIndex == category.title && styles.buttonTextSelected]}>{category.title}</Text>
             </TouchableOpacity>
           </View>
         ))}
       </View>
     )
+    console.log(petCategoryIndex)
   }
   console.log(petCategoryIndex)
   return (
@@ -55,7 +60,13 @@ const MainScreen = () => {
       {/* <FlatList 
         numColumns={2}
       /> */}
-      {petCategoryIndex == 0 ? <AdoptionList /> : petCategoryIndex == 1 ? <FoundList /> : petCategoryIndex == 2 ? <LostList /> : null }
+      {/* {petCategoryIndex == 0 ? <AdoptionList /> : petCategoryIndex == 1 ? <FoundList /> : petCategoryIndex == 2 ? <LostList /> : null } */}
+
+      <AdoptionList 
+        petCategoryIndex={petCategoryIndex}
+        navigation={navigation}
+      />
+
     </SafeAreaView>
   )
 }
