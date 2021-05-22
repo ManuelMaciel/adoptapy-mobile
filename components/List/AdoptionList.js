@@ -8,39 +8,59 @@ import { FontAwesome5 } from '@expo/vector-icons';
 // config
 import config from '../../utils/config';
 
-const Loading = () => {
-  return (
-  <View>
-    <ActivityIndicator size='large' color={config.colorTitle}/>
-  </View>
-  )
-}
 const width = Dimensions.get('screen').width/2-30
-
 
 const AdoptionList = ({ petCategoryIndex, navigation }) => {
 
   const [ data, setData ] = useState([])
   const [ loading, setLoading ] = useState(false);
-  const [ page, setPage ] = useState(1);
+  const [ page, setPage ] = useState(0);
+  const [ endPage, setEndPage ] = useState();
 
-  const getData = useCallback(async () => {
-    setLoading(true)
-    const url = `https://adoptapy.herokuapp.com/api/adoptions?specie=${(petCategoryIndex).toLowerCase()}&page=1`;
+  const getData = async () => {
+    if(page === 0) setPage(1)
+    const url = `https://adoptapy.herokuapp.com/api/adoptions?specie=${(petCategoryIndex).toLowerCase()}&page=${page}`;
     const response = await axios.get(url)
-    setData(response.data.data.docs)
+    setData(data.concat(response.data.data.docs))
+    setEndPage(response.data.data.totalPages)
     // fetch(url).then((res) => res.json())
     //   .then((resJson) => {
     //     setData(resJson);
     //   })
     setLoading(false)
-  });
+  };
+
+  const handleLoadMore = () => {
+    if(page === endPage){
+      console.log(`page : ${page}`)
+      console.log(`endPage: ${endPage}`)
+      console.log(`-------`)
+      setLoading(false)
+    } else {
+      setPage(page + 1)
+      console.log(`page: ${page}`)
+      console.log(`--------`)
+    }
+  }
 
   useEffect(() => {
-    getData()
+    setData([])
+    setEndPage()
+    setPage(0)
+    console.log(`data: ${data}, endPage: ${endPage}, page: ${page}`)
+    console.log(`pet category changed to ${petCategoryIndex}`)
     return () => {
+      console.log('clean')
     }
   }, [petCategoryIndex])
+
+  useEffect(() => {
+    setLoading(true)
+    getData()
+    console.log(`page changed ${page}`)
+    return () => {
+    }
+  }, [page])
 
   function capitalize( val ) {
     return val.toLowerCase()
@@ -87,10 +107,19 @@ const AdoptionList = ({ petCategoryIndex, navigation }) => {
     )
   }
 
+  const Loading = () => {
+    return (
+    loading ?
+    <View style={{marginBottom: 50}}>
+      <ActivityIndicator size='large' color={config.colorTitle}/>
+    </View> : null
+    )
+  }
+
   return (
     <>
-      {loading ? <Loading /> 
-      :
+      {/* {loading ? <Loading /> 
+      : */}
       <View >
         <FlatList 
           columnWrapperStyle={{ justifyContent: 'space-between' }}
@@ -103,9 +132,12 @@ const AdoptionList = ({ petCategoryIndex, navigation }) => {
           numColumns={2}
           renderItem={Card}
           keyExtractor={( item ) => item._id.toString()}
+          ListFooterComponent={Loading}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0}
         />
       </View>
-      }
+      {/* } */}
     </>
   )
 }

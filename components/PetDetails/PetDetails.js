@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-native'
 // config
 import config from '../../utils/config';
 // Material icons
@@ -7,6 +7,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // Linking
 import * as Linking from 'expo-linking';
+// Expo Maps
+import MapView, { Marker } from 'react-native-maps';
+
+const width = Dimensions.get('window').width - 50
 
 const PetDetails = ({ route, navigation }) => {
   // Extract the prop from the adoption list 
@@ -88,8 +92,30 @@ const PetDetails = ({ route, navigation }) => {
           <Text style={styles.descriptionTitle}>Descripción</Text>
           <Text style={styles.descriptionContent}>{item.petData.petDescription}</Text>
         </View>
-        <View>
+        <View style={styles.mapContainer}>
           {/* Mapa y ciudad */}
+          {/* <Marker 
+          style={styles.map} 
+          coordinate={{ latitude : item.petData.petLocation.latitude , longitude : item.petData.petLocation.longitude }}
+          image={{uri: 'custom_pin'}}
+          /> */}
+
+        <MapView
+          style={styles.map}
+          initialRegion={{
+          latitude: item.petData.petLocation.latitude,
+          longitude: item.petData.petLocation.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+          }}
+        >
+          <Marker 
+            coordinate = {{latitude: item.petData.petLocation.latitude ,longitude: item.petData.petLocation.longitude}}
+            pinColor = {config.colorTitle2} // any color: ;
+            title={`Es la ubicacion de ${item.petData.petName}`}
+          />
+        </MapView>
+
         </View>
         <Text style={{ marginHorizontal: 10, fontSize: 20, color: config.colorTitle }}>¿Te interesa {capitalize(item.petData.petName)}?</Text>
         <View style={{ flexDirection: 'row', marginBottom: 50, justifyContent: 'space-between', marginTop: 10}}>
@@ -213,6 +239,16 @@ const styles = StyleSheet.create({
     marginRight: 30,
     padding: 15,
     borderRadius: 50
+  },
+  mapContainer: {
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  map: {
+    width,
+    height: 200,
+    borderRadius: 20
   }
 });
 
