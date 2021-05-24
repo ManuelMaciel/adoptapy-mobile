@@ -42,13 +42,14 @@ const PetForm = () => {
     number: 0,
     whatsapp: false,
   });
+
   const [ error, setError ] = useState(false);
   const [ errorMessage, setErrorMessage ] = useState('')
-
+  // Function to change the input when is typing
   const handleChangeText = (name, value) => {
     setAdoptionForm({ ...adoptionForm, [name]: value})
   }
-
+  // validate the first screen from the ProgressStep library
   const onNextStepFirst = () => {
 
     let rulesOneStep = {
@@ -86,7 +87,7 @@ const PetForm = () => {
       return;
     }
   }
-
+  // validate the second screen from the ProgressStep library
   const onNextStepSecond = () => {
 
     let rulesSecondStep = {
@@ -131,7 +132,7 @@ const PetForm = () => {
       return;
     }
   }
-
+  // validate the thrid screen from the ProgressStep library
   const onNextStepThird= () => {
 
     let rulesThirdStep = {
@@ -165,309 +166,210 @@ const PetForm = () => {
       return;
     }
   }
-  
-
-  // This function is triggered when the "Select an image" button pressed
+  // This function is triggered when the "Subir Imagen" button pressed
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library 
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your photos!");
+      alert("Te has negado a que esta aplicación acceda a tus fotos.");
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync();
-
     // Explore the result
-    console.log(result);
-
+    // console.log(result);
     if (!result.cancelled) {
       setAdoptionForm({ ...adoptionForm, 'petPictures': result.uri})
-      // setPickedImagePath(result.uri);
-      console.log(result.uri);
+      // console.log(result); //result.uri is the route of the image
     }
   }
-
+  // This function is triggered when the "Te voy a buscar" button pressed
   const getLocation = async () => {
+    // Ask the user for the permission  to access the location
       const { granted } = await Location.requestForegroundPermissionsAsync();
-      if (!granted) return;
+
+      if (!granted){
+        alert("Te has negado a que esta aplicación acceda a tu ubicacion.");
+      return;
+      }
+      // obtains from the location the coordinates with latitude and longitude
       const positionLatLng = await Location.getCurrentPositionAsync();
+      // passing the coordinates as argument, get the data of the city, country, zip, etc.
       const positionDetails = await Location.reverseGeocodeAsync(positionLatLng.coords)
+      
       setAdoptionForm({ ...adoptionForm, 'petCity': positionDetails[0].city, 'latitude': positionLatLng.coords.latitude, 'longitude': positionLatLng.coords.longitude, 'marker': true})
-      console.log();
-      console.log(`lat: ${adoptionForm.latitude}, long: ${adoptionForm.longitude}, marker: ${adoptionForm.marker}, city: ${adoptionForm.petCity}`)
+      // console.log();
+      // console.log(`lat: ${adoptionForm.latitude}, long: ${adoptionForm.longitude}, marker: ${adoptionForm.marker}, city: ${adoptionForm.petCity}`)
   };
 
   return (
     <ScrollView style={styles.container}>
-    <ProgressSteps>
-      <ProgressStep label="Datos de la mascota" onNext={onNextStepFirst} errors={error}>
-        <View style={styles.inputGroup}>
-          <View>
-            {/* Name */}
-            <TextInput 
-            placeholder='Nombre del animalito' 
-            onChangeText={(value) => handleChangeText('petName', value)}
-            />
-          </View>
-          <View>
-            {/* Specie */}
-            <Text>Tipo de animalito</Text>
-            <Picker
-              selectedValue={adoptionForm.petSpecie}
-              onValueChange={(value) => handleChangeText('petSpecie', value)}
-              mode='modal'
-              style={{height:30, width: width - 55, marginHorizontal: 20,}}
-            >
-              <Picker.Item label="Perro" value="perro" />
-              <Picker.Item label="Gato" value="gato" />
-              <Picker.Item label="Otro" value="otro" />
-            </Picker>
-          </View>
-          <View>
-            {/* Size*/}
-            <Text>Tamaño del animalito</Text>
-            <Picker
-              selectedValue={adoptionForm.petSize}
-              onValueChange={(value) => handleChangeText('petSize', value)}
-              mode='modal'
-              style={{height:30, width: width - 55, marginHorizontal: 20,}}
-            >
-              <Picker.Item label="Pequeño" value="pequeño" />
-              <Picker.Item label="Mediano" value="mediano" />
-              <Picker.Item label="Grande" value="grande" />
-            </Picker>
-          </View>
-          <View>
-            {/* Sex*/}
-            <Text>Sexo del animalito</Text>
-            <Picker
-              selectedValue={adoptionForm.petSex}
-              onValueChange={(value) => handleChangeText('petSex', value)}
-              mode='modal'
-              style={{height:30, width: width - 55, marginHorizontal: 20,}}
-            >
-              <Picker.Item label="Macho" value="macho" />
-              <Picker.Item label="Hembra" value="hembra" />
-            </Picker>
-          </View>
-          <View>
-            {/* Name */}
-            <TextInput 
-            placeholder='Raza del animalito' 
-            onChangeText={(value) => handleChangeText('petBreed', value)}
-            />
-          </View>
-        </View>
-        {error ? <Text>{errorMessage}</Text> : null}
-      </ProgressStep>
-      <ProgressStep label="Más datos de la mascota" onNext={onNextStepSecond} errors={error}>
-          <View style={{ alignItems: 'center' }}>
-            <Text>This is the content within step 2!</Text>
+      <ProgressSteps>
+        <ProgressStep label="Datos de la mascota" onNext={onNextStepFirst} errors={error}>
+          <View style={styles.inputGroup}>
             <View>
-            {/* Month */}
-            <NumericInput 
-              value={adoptionForm.month} 
-              onChange={value => handleChangeText('month', value)} 
-              onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-              totalWidth={240} 
-              totalHeight={50} 
-              iconSize={25}
-              step={1.5}
-              valueType='real'
-              rounded 
-              textColor='#B0228C' 
-              iconStyle={{ color: 'white' }} 
-              rightButtonBackgroundColor='#EA3788' 
-              leftButtonBackgroundColor='#E56B70'/>
-              <NumericInput 
-              value={adoptionForm.year} 
-              onChange={value => handleChangeText('year', value)} 
-              onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-              totalWidth={240} 
-              totalHeight={50} 
-              iconSize={25}
-              step={1.5}
-              valueType='real'
-              rounded 
-              textColor='#B0228C' 
-              iconStyle={{ color: 'white' }} 
-              rightButtonBackgroundColor='#EA3788' 
-              leftButtonBackgroundColor='#E56B70'/>
-              <CheckBox
-                disabled={false}
-                value={adoptionForm.petVaccines}
-                onValueChange={(value) => handleChangeText('petVaccines', value)}
+              {/* Name */}
+              <TextInput 
+              placeholder='Nombre del animalito' 
+              onChangeText={(value) => handleChangeText('petName', value)}
               />
-              <CheckBox
-                disabled={false}
-                value={adoptionForm.petSterilized}
-                onValueChange={(value) => handleChangeText('petSterilized', value)}
+            </View>
+            <View>
+              {/* Specie */}
+              <Text>Tipo de animalito</Text>
+              <Picker
+                selectedValue={adoptionForm.petSpecie}
+                onValueChange={(value) => handleChangeText('petSpecie', value)}
+                mode='modal'
+                style={{height:30, width: width - 55, marginHorizontal: 20,}}
+              >
+                <Picker.Item label="Perro" value="perro" />
+                <Picker.Item label="Gato" value="gato" />
+                <Picker.Item label="Otro" value="otro" />
+              </Picker>
+            </View>
+            <View>
+              {/* Size*/}
+              <Text>Tamaño del animalito</Text>
+              <Picker
+                selectedValue={adoptionForm.petSize}
+                onValueChange={(value) => handleChangeText('petSize', value)}
+                mode='modal'
+                style={{height:30, width: width - 55, marginHorizontal: 20,}}
+              >
+                <Picker.Item label="Pequeño" value="pequeño" />
+                <Picker.Item label="Mediano" value="mediano" />
+                <Picker.Item label="Grande" value="grande" />
+              </Picker>
+            </View>
+            <View>
+              {/* Sex*/}
+              <Text>Sexo del animalito</Text>
+              <Picker
+                selectedValue={adoptionForm.petSex}
+                onValueChange={(value) => handleChangeText('petSex', value)}
+                mode='modal'
+                style={{height:30, width: width - 55, marginHorizontal: 20,}}
+              >
+                <Picker.Item label="Macho" value="macho" />
+                <Picker.Item label="Hembra" value="hembra" />
+              </Picker>
+            </View>
+            <View>
+              {/* Name */}
+              <TextInput 
+              placeholder='Raza del animalito' 
+              onChangeText={(value) => handleChangeText('petBreed', value)}
+              />
+            </View>
+          </View>
+          {error ? <Text>{errorMessage}</Text> : null}
+        </ProgressStep>
+        <ProgressStep label="Más datos de la mascota" onNext={onNextStepSecond} errors={error}>
+            <View style={{ alignItems: 'center' }}>
+              <Text>This is the content within step 2!</Text>
+              <View>
+              {/* Month */}
+              <NumericInput 
+                value={adoptionForm.month} 
+                onChange={value => handleChangeText('month', value)} 
+                onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                totalWidth={240} 
+                totalHeight={50} 
+                iconSize={25}
+                step={1.5}
+                valueType='real'
+                rounded 
+                textColor='#B0228C' 
+                iconStyle={{ color: 'white' }} 
+                rightButtonBackgroundColor='#EA3788' 
+                leftButtonBackgroundColor='#E56B70'/>
+                <NumericInput 
+                value={adoptionForm.year} 
+                onChange={value => handleChangeText('year', value)} 
+                onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                totalWidth={240} 
+                totalHeight={50} 
+                iconSize={25}
+                step={1.5}
+                valueType='real'
+                rounded 
+                textColor='#B0228C' 
+                iconStyle={{ color: 'white' }} 
+                rightButtonBackgroundColor='#EA3788' 
+                leftButtonBackgroundColor='#E56B70'/>
+                <CheckBox
+                  disabled={false}
+                  value={adoptionForm.petVaccines}
+                  onValueChange={(value) => handleChangeText('petVaccines', value)}
+                />
+                <CheckBox
+                  disabled={false}
+                  value={adoptionForm.petSterilized}
+                  onValueChange={(value) => handleChangeText('petSterilized', value)}
+                />
+                <TextInput 
+                  placeholder='Descripcion' 
+                  onChangeText={(value) => handleChangeText('petDescription', value)}
+                  multiline
+                  numberOfLines={4}
+                />
+                <Button onPress={showImagePicker} title="Select an image" />
+                {
+                  adoptionForm.petPictures !== null && <Image
+                    source={{ uri: adoptionForm.petPictures }}
+                    style={{width: 100, height: 100}}
+                  />
+                }
+            </View>
+            {error ? <Text>{errorMessage}</Text> : null}
+            </View>
+          </ProgressStep>
+        <ProgressStep label="Datos de contacto" onSubmit={onNextStepThird} errors={error}>
+            <View style={{ alignItems: 'center' }}>
+                <Text>This is the content within step 3!</Text>
+                <View style={{paddingVertical: 15, alignItems: 'center', justifyContent: 'center',}}>
+                <Button onPress={getLocation} title="Te voy a buscar" />
+                  <MapView
+                    style={{width, height: 200, borderRadius: 20}}
+                    region={{
+                    latitude: adoptionForm.latitude,
+                    longitude: adoptionForm.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                    }}
+                    // onPress={(e) => console.log(e.nativeEvent)}
+                    onPress={(e) => setAdoptionForm({ ...adoptionForm, 'marker': true, 'latitude': e.nativeEvent.coordinate.latitude, 'longitude': e.nativeEvent.coordinate.longitude})}
+                    // onRegionChange={(region) => setAdoptionForm({ ...adoptionForm, 'marker': true, 'latitude': region.latitude, 'longitude': region.longitude})}
+                  >
+                    {adoptionForm.marker
+                      ?
+                        <MapView.Marker coordinate={{latitude: adoptionForm.latitude ,longitude: adoptionForm.longitude}} pinColor = {config.colorTitle2} />
+                      :
+                        null
+                    }
+                  </MapView>
+                </View>
+            </View>
+            <View>
+              <TextInput 
+                placeholder='Nombre de contacto' 
+                onChangeText={(value) => handleChangeText('name', value)}
               />
               <TextInput 
-                placeholder='Descripcion' 
-                onChangeText={(value) => handleChangeText('petDescription', value)}
-                multiline
-                numberOfLines={4}
+                placeholder='Numero de telefono' 
+                onChangeText={(value) => handleChangeText('number', value)}
               />
-              <Button onPress={showImagePicker} title="Select an image" />
-              {
-                adoptionForm.petPictures !== null && <Image
-                  source={{ uri: adoptionForm.petPictures }}
-                  style={{width: 100, height: 100}}
-                />
-              }
-          </View>
-          {error ? <Text>{errorMessage}</Text> : null}
-          </View>
-        </ProgressStep>
-        <ProgressStep label="Datos de contacto" onSubmit={onNextStepThird} errors={error}>
-          <View style={{ alignItems: 'center' }}>
-              <Text>This is the content within step 3!</Text>
-              <View style={{paddingVertical: 15, alignItems: 'center', justifyContent: 'center',}}>
-              <Button onPress={getLocation} title="Te voy a buscar" />
-                <MapView
-                  style={{width, height: 200, borderRadius: 20}}
-                  region={{
-                  latitude: adoptionForm.latitude,
-                  longitude: adoptionForm.longitude,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                  }}
-                  // onPress={(e) => console.log(e.nativeEvent)}
-                  onPress={(e) => setAdoptionForm({ ...adoptionForm, 'marker': true, 'latitude': e.nativeEvent.coordinate.latitude, 'longitude': e.nativeEvent.coordinate.longitude})}
-                  // onRegionChange={(region) => setAdoptionForm({ ...adoptionForm, 'marker': true, 'latitude': region.latitude, 'longitude': region.longitude})}
-                >
-                  {adoptionForm.marker
-                    ?
-                      <MapView.Marker coordinate={{latitude: adoptionForm.latitude ,longitude: adoptionForm.longitude}} pinColor = {config.colorTitle2} />
-                    :
-                      null
-                  }
-                </MapView>
-              </View>
-          </View>
-          <View>
-            <TextInput 
-              placeholder='Nombre de contacto' 
-              onChangeText={(value) => handleChangeText('name', value)}
-            />
-            <TextInput 
-              placeholder='Numero de telefono' 
-              onChangeText={(value) => handleChangeText('number', value)}
-            />
-            <CheckBox
-              disabled={false}
-              value={adoptionForm.whatsapp}
-              onValueChange={(value) => handleChangeText('whatsapp', value)}
-            />
-          </View>
-          {error ? <Text>{errorMessage}</Text> : null}
-        </ProgressStep>
+              <CheckBox
+                disabled={false}
+                value={adoptionForm.whatsapp}
+                onValueChange={(value) => handleChangeText('whatsapp', value)}
+              />
+            </View>
+            {error ? <Text>{errorMessage}</Text> : null}
+          </ProgressStep>
       </ProgressSteps>
-      
-      {/* <View style={styles.inputGroup}> */}
-        {/* Pet Name Input */}
-        {/* <TextInput 
-        placeholder='Nombre del animalito' 
-        onChangeText={(value) => handleChangeText('petName', value)}
-        />
-      </View>
-      <View styles={styles.inputGroup}>
-        <Picker
-          selectedValue={adoptionForm.petSpecie}
-          onValueChange={(value) => handleChangeText('petSpecie', value)}
-          mode='dropdown'
-          style={{height:30, width: 300}}
-        >
-          <Picker.Item label="Perro" value="perro" />
-          <Picker.Item label="Gato" value="gato" />
-          <Picker.Item label="Otro" value="otro" />
-        </Picker>
-      </View> */}
-
-
-      {/* <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Nombre de la mascota' 
-        onChangeText={(value) => handleChangeText('petName', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Tipo de mascota' 
-        onChangeText={(value) => handleChangeText('petSpecie', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Edad de la mascota' 
-        onChangeText={(value) => handleChangeText('petAge', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-      <TextInput 
-        placeholder='Tamanio de la mascota' 
-        onChangeText={(value) => handleChangeText('petSize', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Sexo' 
-        onChangeText={(value) => handleChangeText('petSex', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Raza de la mascota' 
-        onChangeText={(value) => handleChangeText('petBreed', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Descripcion' 
-        onChangeText={(value) => handleChangeText('petDescription', value)}
-        multiline
-        numberOfLines={4}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Ciudad' 
-        onChangeText={(value) => handleChangeText('petCity', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Latitude posicional' 
-        onChangeText={(value) => handleChangeText('latitude', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Longitud posicional' 
-        onChangeText={(value) => handleChangeText('longitude', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Nombre de contacto' 
-        onChangeText={(value) => handleChangeText('name', value)}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <TextInput 
-        placeholder='Numero de contacto' 
-        onChangeText={(value) => handleChangeText('number', value)}
-        />
-      </View>
-      <View>
-        <Button 
-          title='Guardar Mascota' 
-          onPress={() => console.log(adoptionForm)}
-        />
-      </View> */}
     </ScrollView>
   )
 }
