@@ -1,10 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
+import AdoptionCreateScreen from './mascot/adoption/AdoptionCreateScreen';
 const NewPosts = () => {
   return (
-    <View style={styles.center}>
-      <Text>This is the new posts screen</Text>
-    </View>
+    <AdoptionCreateScreen />
   );
 };
 const styles = StyleSheet.create({
