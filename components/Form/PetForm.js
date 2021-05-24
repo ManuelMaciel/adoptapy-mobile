@@ -18,6 +18,8 @@ import * as Location from 'expo-location';
 import config from '../../utils/config';
 // Validation
 import validation from 'check-validation'
+// icons
+import { SimpleLineIcons } from '@expo/vector-icons'; 
 
 const width = Dimensions.get('window').width
 const PetForm = () => {
@@ -205,170 +207,293 @@ const PetForm = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <ProgressSteps>
-        <ProgressStep label="Datos de la mascota" onNext={onNextStepFirst} errors={error}>
+      {/* Component ProgressStep */}
+      <ProgressSteps 
+        activeStepIconBorderColor={config.colorTitle}
+        activeLabelColor={config.colorTitle}
+        activeStepNumColor={config.colorTitle}
+        completedProgressBarColor={config.colorTitle2}
+        completedStepIconColor={config.colorTitle2}
+      >
+        {/* Screen per step */}
+        <ProgressStep 
+          label='Datos de la mascota' 
+          onNext={onNextStepFirst} 
+          errors={error}
+          nextBtnText='Siguiente'
+          nextBtnStyle={styles.psBtn}
+          nextBtnTextStyle={styles.psBtnText}
+          scrollable={true}
+        >
           <View style={styles.inputGroup}>
             <View>
               {/* Name */}
               <TextInput 
-              placeholder='Nombre del animalito' 
-              onChangeText={(value) => handleChangeText('petName', value)}
+                style={styles.input}
+                placeholder='Nombre del animalito'
+                value={adoptionForm.petName}
+                onChangeText={(value) => handleChangeText('petName', value)}
+                keyboardType='default'
+                keyboardAppearance='default'
+                maxLength={30}
+                placeholderTextColor='gray'
               />
             </View>
             <View>
               {/* Specie */}
-              <Text>Tipo de animalito</Text>
-              <Picker
-                selectedValue={adoptionForm.petSpecie}
-                onValueChange={(value) => handleChangeText('petSpecie', value)}
-                mode='modal'
-                style={{height:30, width: width - 55, marginHorizontal: 20,}}
-              >
-                <Picker.Item label="Perro" value="perro" />
-                <Picker.Item label="Gato" value="gato" />
-                <Picker.Item label="Otro" value="otro" />
-              </Picker>
+              <Text style={styles.label}>Tipo de animalito</Text>
+              <View style={ styles.pickerContainer }>
+                <Picker
+                  selectedValue={adoptionForm.petSpecie}
+                  onValueChange={(value) => handleChangeText('petSpecie', value)}
+                  mode='dialog'
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Perro" value="perro" />
+                  <Picker.Item label="Gato" value="gato" />
+                  <Picker.Item label="Otro" value="otro" />
+                </Picker>
+                <SimpleLineIcons name="arrow-down" size={19} color={config.colorTitle} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
+              </View>
             </View>
             <View>
               {/* Size*/}
-              <Text>Tamaño del animalito</Text>
-              <Picker
-                selectedValue={adoptionForm.petSize}
-                onValueChange={(value) => handleChangeText('petSize', value)}
-                mode='modal'
-                style={{height:30, width: width - 55, marginHorizontal: 20,}}
-              >
-                <Picker.Item label="Pequeño" value="pequeño" />
-                <Picker.Item label="Mediano" value="mediano" />
-                <Picker.Item label="Grande" value="grande" />
-              </Picker>
+              <Text style={styles.label}>Tamaño del animalito</Text>
+              <View style={ styles.pickerContainer }> 
+                <Picker
+                  selectedValue={adoptionForm.petSize}
+                  onValueChange={(value) => handleChangeText('petSize', value)}
+                  mode='dialog'
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Pequeño" value="pequeño" />
+                  <Picker.Item label="Mediano" value="mediano" />
+                  <Picker.Item label="Grande" value="grande" />
+                </Picker>
+                <SimpleLineIcons name="arrow-down" size={19} color={config.colorTitle} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
+              </View>
             </View>
             <View>
               {/* Sex*/}
-              <Text>Sexo del animalito</Text>
-              <Picker
-                selectedValue={adoptionForm.petSex}
-                onValueChange={(value) => handleChangeText('petSex', value)}
-                mode='modal'
-                style={{height:30, width: width - 55, marginHorizontal: 20,}}
-              >
-                <Picker.Item label="Macho" value="macho" />
-                <Picker.Item label="Hembra" value="hembra" />
-              </Picker>
+              <Text style={styles.label}>Sexo del animalito</Text>
+              <View style={ styles.pickerContainer }>
+                <Picker
+                  selectedValue={adoptionForm.petSex}
+                  onValueChange={(value) => handleChangeText('petSex', value)}
+                  mode='dialog'
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Macho" value="macho" />
+                  <Picker.Item label="Hembra" value="hembra" />
+                </Picker>
+                <SimpleLineIcons name="arrow-down" size={19} color={config.colorTitle} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
+              </View>
             </View>
             <View>
-              {/* Name */}
+              {/* Breed */}
               <TextInput 
-              placeholder='Raza del animalito' 
-              onChangeText={(value) => handleChangeText('petBreed', value)}
+                style={styles.input}
+                value={adoptionForm.petBreed}
+                placeholder='Raza del animalito' 
+                onChangeText={(value) => handleChangeText('petBreed', value)}
+                keyboardType='default'
+                keyboardAppearance='default'
+                maxLength={30}
+                placeholderTextColor='gray'
               />
             </View>
           </View>
-          {error ? <Text>{errorMessage}</Text> : null}
+          {error ? <Text style={styles.error}>{errorMessage}</Text> : null}
         </ProgressStep>
-        <ProgressStep label="Más datos de la mascota" onNext={onNextStepSecond} errors={error}>
-            <View style={{ alignItems: 'center' }}>
-              <Text>This is the content within step 2!</Text>
-              <View>
-              {/* Month */}
+        {/* End of Screen Step 1 */}
+        <ProgressStep
+          label="Más datos de la mascota" 
+          onNext={onNextStepSecond} 
+          errors={error}
+          nextBtnText='Siguiente'
+          nextBtnStyle={styles.psBtn}
+          nextBtnTextStyle={styles.psBtnText}
+          previousBtnText='Atrás'
+          previousBtnStyle={styles.psBtn}
+          previousBtnTextStyle={styles.psBtnText}
+          scrollable={true}
+        >
+          <View style={styles.inputGroup}>
+          {/* Month */}
+            <Text style={styles.label}>¿Cuantos meses tiene {adoptionForm.petName}?</Text>
+            <View style={{ alignItems: 'center', paddingVertical: 5}}>
               <NumericInput 
                 value={adoptionForm.month} 
-                onChange={value => handleChangeText('month', value)} 
+                minValue={0}
+                maxValue={11}
+                step={1}
+                borderColor={config.colorTitle}
                 onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                totalWidth={240} 
+                totalWidth={140} 
                 totalHeight={50} 
-                iconSize={25}
-                step={1.5}
+                iconSize={20}
                 valueType='real'
-                rounded 
-                textColor='#B0228C' 
+                rounded={true}
+                textColor={config.colorDescription} 
                 iconStyle={{ color: 'white' }} 
-                rightButtonBackgroundColor='#EA3788' 
-                leftButtonBackgroundColor='#E56B70'/>
-                <NumericInput 
+                rightButtonBackgroundColor={config.colorTitle} 
+                leftButtonBackgroundColor={config.colorTitle}
+                onChange={value => handleChangeText('month', value)} 
+              />
+            </View>
+            {/* Year */}
+            <Text style={styles.label}>¿Cuantos años tiene {adoptionForm.petName}?</Text>
+            <View style={{ alignItems: 'center', paddingVertical: 5}}>
+              <NumericInput 
                 value={adoptionForm.year} 
+                minValue={0}
+                maxValue={30}
+                step={1}
+                borderColor={config.colorTitle}
+                totalWidth={140} 
+                totalHeight={50} 
+                iconSize={20}
+                valueType='real'
+                rounded={true}
+                textColor={config.colorDescription} 
+                iconStyle={{ color: 'white' }} 
+                rightButtonBackgroundColor={config.colorTitle} 
+                leftButtonBackgroundColor={config.colorTitle}
                 onChange={value => handleChangeText('year', value)} 
                 onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                totalWidth={240} 
-                totalHeight={50} 
-                iconSize={25}
-                step={1.5}
-                valueType='real'
-                rounded 
-                textColor='#B0228C' 
-                iconStyle={{ color: 'white' }} 
-                rightButtonBackgroundColor='#EA3788' 
-                leftButtonBackgroundColor='#E56B70'/>
+              />
+            </View>
+            {/* Checkboxes */}
+            <View style={{ flexDirection: 'column'}}>
+              {/* Vaccines */}
+              <View style={{ flexDirection: 'row', paddingVertical: 5, alignItems: 'center'}}>
+                <Text style={ styles.label }>¿{adoptionForm.petName} está vacunado?</Text>
                 <CheckBox
                   disabled={false}
                   value={adoptionForm.petVaccines}
                   onValueChange={(value) => handleChangeText('petVaccines', value)}
+                  // tintColors={{ true: 'red, false: 'yellow' }}
+                  tintColors={{ true: config.colorTitle, false: config.colorDescription }}
                 />
+              </View>
+                {/* Sterilized */}
+              <View style={{ flexDirection: 'row', paddingVertical: 5, alignItems: 'center',}}>
+                <Text style={ styles.label }>¿{adoptionForm.petName} está esterilizado?</Text>
                 <CheckBox
                   disabled={false}
                   value={adoptionForm.petSterilized}
                   onValueChange={(value) => handleChangeText('petSterilized', value)}
+                  tintColors={{ true: config.colorTitle, false: config.colorDescription }}
                 />
-                <TextInput 
-                  placeholder='Descripcion' 
-                  onChangeText={(value) => handleChangeText('petDescription', value)}
-                  multiline
-                  numberOfLines={4}
-                />
-                <Button onPress={showImagePicker} title="Select an image" />
-                {
-                  adoptionForm.petPictures !== null && <Image
-                    source={{ uri: adoptionForm.petPictures }}
-                    style={{width: 100, height: 100}}
-                  />
-                }
-            </View>
-            {error ? <Text>{errorMessage}</Text> : null}
-            </View>
-          </ProgressStep>
-        <ProgressStep label="Datos de contacto" onSubmit={onNextStepThird} errors={error}>
-            <View style={{ alignItems: 'center' }}>
-                <Text>This is the content within step 3!</Text>
-                <View style={{paddingVertical: 15, alignItems: 'center', justifyContent: 'center',}}>
-                <Button onPress={getLocation} title="Te voy a buscar" />
-                  <MapView
-                    style={{width, height: 200, borderRadius: 20}}
-                    region={{
-                    latitude: adoptionForm.latitude,
-                    longitude: adoptionForm.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                    }}
-                    // onPress={(e) => console.log(e.nativeEvent)}
-                    onPress={(e) => setAdoptionForm({ ...adoptionForm, 'marker': true, 'latitude': e.nativeEvent.coordinate.latitude, 'longitude': e.nativeEvent.coordinate.longitude})}
-                    // onRegionChange={(region) => setAdoptionForm({ ...adoptionForm, 'marker': true, 'latitude': region.latitude, 'longitude': region.longitude})}
-                  >
-                    {adoptionForm.marker
-                      ?
-                        <MapView.Marker coordinate={{latitude: adoptionForm.latitude ,longitude: adoptionForm.longitude}} pinColor = {config.colorTitle2} />
-                      :
-                        null
-                    }
-                  </MapView>
-                </View>
+              </View>
             </View>
             <View>
               <TextInput 
+                style={styles.inputLarge}
+                placeholder='Descripcion' 
+                value={adoptionForm.petDescription}
+                keyboardType='default'
+                keyboardAppearance='default'
+                placeholderTextColor='gray'
+                onChangeText={(value) => handleChangeText('petDescription', value)}
+                multiline
+                numberOfLines={4}
+                maxLength={100}
+              />
+            </View>
+            <View style={{ paddingVertical: 12}}>
+              <Button onPress={showImagePicker} title={`Sube una imagen de ${adoptionForm.petName}`} color={config.colorTitle} />
+                  {
+                    adoptionForm.petPictures !== null && <Image
+                      source={{ uri: adoptionForm.petPictures }}
+                      style={{    
+                      alignSelf: 'center',
+                      height: 350, 
+                      width: 300, 
+                      maxWidth: 300, 
+                      maxHeight: 350,
+                      borderRadius: 10,
+                      marginTop: 15
+                    }}
+                    resizeMode='contain'
+                    />
+                  }
+            </View>
+            {error ? <Text style={styles.error}>{errorMessage}</Text> : null}
+          </View>  
+        </ProgressStep>
+        {/* End of Screen step 2 */}
+        <ProgressStep 
+          label="Datos de contacto" 
+          onSubmit={onNextStepThird}
+          nextBtnTextStyle={styles.psBtnText}
+          nextBtnStyle={styles.psBtnSubmit}
+          finishBtnText={'Subir'}
+          previousBtnText='Atrás'
+          previousBtnStyle={styles.psBtn}
+          previousBtnTextStyle={styles.psBtnText}
+          errors={error}
+          scrollable={true}
+        >
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Debes marcar tu posicion en el mapa</Text>
+            <View style={{paddingVertical: 15, alignItems: 'center', justifyContent: 'center',}}>
+                <MapView
+                  style={{width: width - 55, height: 200, borderRadius: 30, paddingVertical: 15}}
+                  region={{
+                  latitude: adoptionForm.latitude,
+                  longitude: adoptionForm.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                  }}
+                  // onPress={(e) => console.log(e.nativeEvent)}
+                  onPress={(e) => setAdoptionForm({ ...adoptionForm, 'marker': true, 'latitude': e.nativeEvent.coordinate.latitude, 'longitude': e.nativeEvent.coordinate.longitude})}
+                  // onRegionChange={(region) => setAdoptionForm({ ...adoptionForm, 'marker': true, 'latitude': region.latitude, 'longitude': region.longitude})}
+                >
+                {adoptionForm.marker
+                  ?
+                    <MapView.Marker coordinate={{latitude: adoptionForm.latitude ,longitude: adoptionForm.longitude}} pinColor = {config.colorTitle2} />
+                  :
+                    null
+                }
+              </MapView>
+            </View>
+            <Button onPress={getLocation} title="Te voy a buscar" color={config.colorTitle} />
+            <View>
+              <TextInput 
+                style={styles.input}
+                value={adoptionForm.name}
+                keyboardType='default'
+                keyboardAppearance='default'
+                maxLength={30}
+                placeholderTextColor='gray'
                 placeholder='Nombre de contacto' 
                 onChangeText={(value) => handleChangeText('name', value)}
               />
               <TextInput 
+                style={styles.input}
+                value={adoptionForm.number}
+                keyboardType='numeric'
+                keyboardAppearance='default'
+                maxLength={10}
+                placeholderTextColor='gray'
                 placeholder='Numero de telefono' 
                 onChangeText={(value) => handleChangeText('number', value)}
               />
+            </View>
+            <View style={{ flexDirection: 'row', paddingVertical: 5, alignItems: 'center'}}>
+              <Text style={ styles.label }>¿Este numero tiene Whatstapp?</Text>
               <CheckBox
                 disabled={false}
                 value={adoptionForm.whatsapp}
                 onValueChange={(value) => handleChangeText('whatsapp', value)}
+                // tintColors={{ true: 'red, false: 'yellow' }}
+                tintColors={{ true: config.colorTitle, false: config.colorDescription }}
               />
             </View>
-            {error ? <Text>{errorMessage}</Text> : null}
-          </ProgressStep>
+            {error ? <Text style={styles.error}>{errorMessage}</Text> : null}
+          </View>
+        </ProgressStep>
       </ProgressSteps>
     </ScrollView>
   )
@@ -377,15 +502,90 @@ const PetForm = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 35,
-    paddingHorizontal: 15
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginBottom: 50
+  },
+  psBtn: {
+    borderWidth: 1,
+    borderColor: config.colorTitle,
+    backgroundColor: config.colorTitle,
+    borderRadius: 10,
+    padding: 10,
+    width: 100, 
+    height: 50,
+  },
+  psBtnSubmit: {
+    borderWidth: 1,
+    borderColor: config.green,
+    backgroundColor: config.green,
+    borderRadius: 10,
+    padding: 10,
+    width: 100, 
+    height: 50,
+  },
+  psBtnText: {
+    fontWeight: '600',
+    // color: config.colorTitle,
+    color: 'white',
+    textAlign: 'center',
+    textAlignVertical: 'center'
   },
   inputGroup: {
-    flex: 0.8,
-    padding: 0,
-    marginBottom: 15, 
-    borderBottomColor: '#cccccc',
-    alignItems: 'center'
+    paddingHorizontal: 20,
+    marginTop: 30, 
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  }, 
+  input: {
+    height: 40,
+    padding: 12,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: config.colorBackground,
+    backgroundColor: config.colorBackground,
+    color: 'black'
+  },
+  inputLarge: {
+    height: 80,
+    padding: 12,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: config.colorBackground,
+    backgroundColor: config.colorBackground,
+    color: 'black'
+  },
+  label: {
+    color: config.colorDescription,
+  },
+  pickerContainer: {
+    backgroundColor: config.colorBackground,
+    height: 40,
+    justifyContent: 'center',
+    marginVertical: 5,
+    borderRadius: 10,
+  },
+  picker: { 
+    height: 40,
+    width: width - 55, 
+    marginVertical: 10,
+    color: config.colorDescription,
+    backgroundColor: config.colorBackground,
+    borderRadius: 10,
+  },
+  error: {
+    width: width - 55,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#EF4444',
+    color: '#fff',
+    alignSelf: 'center',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    marginVertical: 10
   }
 })
 
