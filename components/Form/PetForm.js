@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, ScrollView, StyleSheet, Text, Dimensions, Image, Alert } from 'react-native'
+import { View, TextInput, Button, ScrollView, StyleSheet, Text, Dimensions, Image, Alert, ActivityIndicator } from 'react-native'
 // Picker
 import {Picker} from '@react-native-picker/picker';
 // Multiple step library
@@ -22,6 +22,7 @@ import validation from 'check-validation'
 import { SimpleLineIcons } from '@expo/vector-icons'; 
 
 const width = Dimensions.get('window').width
+
 const PetForm = () => {
 
   const [ adoptionForm, setAdoptionForm ] = useState({
@@ -47,6 +48,18 @@ const PetForm = () => {
 
   const [ error, setError ] = useState(false);
   const [ errorMessage, setErrorMessage ] = useState('')
+
+  const [ loading, setLoading ] = useState(false)
+
+  const Loading = () => {
+    return (
+    loading ?
+    <View>
+      <ActivityIndicator size='large' color={config.colorTitle}/>
+    </View> : null
+    )
+  }
+
   // Function to change the input when is typing
   const handleChangeText = (name, value) => {
     setAdoptionForm({ ...adoptionForm, [name]: value})
@@ -160,7 +173,7 @@ const PetForm = () => {
       //success
       setError(false)
       console.log('sus datos fueron enviados')
-      console.log(adoptionForm)
+      setLoading(true)
     } else {
       //fail
       setError(true)
@@ -495,6 +508,7 @@ const PetForm = () => {
           </View>
         </ProgressStep>
       </ProgressSteps>
+    
     </ScrollView>
   )
 }
@@ -534,7 +548,7 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     paddingHorizontal: 20,
-    marginTop: 30, 
+    marginTop: 10, 
     flexDirection: 'column',
     justifyContent: 'space-between'
   }, 
