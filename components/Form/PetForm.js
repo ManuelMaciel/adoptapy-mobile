@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, ScrollView, StyleSheet, Text, Dimensions, Image, Alert, ActivityIndicator } from 'react-native'
+import React, { useState} from 'react';
+import { View, TextInput, Button, ScrollView, StyleSheet, Text, Dimensions, Image, ActivityIndicator } from 'react-native'
 // Picker
 import {Picker} from '@react-native-picker/picker';
 // Multiple step library
@@ -20,11 +20,16 @@ import config from '../../utils/config';
 import validation from 'check-validation'
 // icons
 import { SimpleLineIcons } from '@expo/vector-icons'; 
+// Axios
+// import axios from 'axios';
+// Loader
+import Loader from '../Loader/Loader';
 
+// Get the dimension width from the screen/window
 const width = Dimensions.get('window').width
 
 const PetForm = () => {
-
+  // save the data from the inputs
   const [ adoptionForm, setAdoptionForm ] = useState({
     petName: '',
     petSpecie: 'perro',
@@ -36,7 +41,7 @@ const PetForm = () => {
     petVaccines: false,
     petSterilized: false,
     petDescription: '',
-    petPictures: null,
+    image: null,
     petCity: 'Asunción',
     latitude: -25.2819,
     longitude: -57.635,
@@ -44,25 +49,45 @@ const PetForm = () => {
     name: '',
     number: 0,
     whatsapp: false,
+    postType: 'adoption',
+    type: 'image/jpeg',
+    petPictures: null,
   });
-
-  const [ error, setError ] = useState(false);
-  const [ errorMessage, setErrorMessage ] = useState('')
-
-  const [ loading, setLoading ] = useState(false)
-
-  const Loading = () => {
-    return (
-    loading ?
-    <View>
-      <ActivityIndicator size='large' color={config.colorTitle}/>
-    </View> : null
-    )
+  // reset the adoptionform state
+  const resetState = () => {
+    setAdoptionForm({
+      petName: '',
+      petSpecie: 'perro',
+      petSize: 'pequeño',
+      petSex: 'macho',
+      petBreed: '',
+      month: 0,
+      year: 0,
+      petVaccines: false,
+      petSterilized: false,
+      petDescription: '',
+      image: null,
+      petCity: 'Asunción',
+      latitude: -25.2819,
+      longitude: -57.635,
+      marker: null,
+      name: '',
+      number: 0,
+      whatsapp: false,
+      postType: 'adoption',
+      type: 'image/jpeg',
+      petPictures: null,
+    })
   }
 
+  // error states
+  const [ error, setError ] = useState(false);
+  const [ errorMessage, setErrorMessage ] = useState('');
+  // Loading state
+  const [ loading, setLoading ] = useState(false)
   // Function to change the input when is typing
   const handleChangeText = (name, value) => {
-    setAdoptionForm({ ...adoptionForm, [name]: value})
+    setAdoptionForm({ ...adoptionForm, [name]: value});
   }
   // validate the first screen from the ProgressStep library
   const onNextStepFirst = () => {
@@ -124,7 +149,7 @@ const PetForm = () => {
         minLength: "La descripcion debe tener un minimo 10 caracteres",
         maxLength: "La descripcion debe tener un maximo de 150"
       },
-      petPictures : {
+      image : {
         rules: "required",
         required: "Debe subir una imagen del animalito"
       }
@@ -172,8 +197,9 @@ const PetForm = () => {
     if (check.result) {
       //success
       setError(false)
-      console.log('sus datos fueron enviados')
       setLoading(true)
+      sendData();
+      // console.log(adoptionForm)
     } else {
       //fail
       setError(true)
@@ -185,7 +211,7 @@ const PetForm = () => {
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library 
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
+    // show alert 
     if (permissionResult.granted === false) {
       alert("Te has negado a que esta aplicación acceda a tus fotos.");
       return;
@@ -193,10 +219,16 @@ const PetForm = () => {
 
     const result = await ImagePicker.launchImageLibraryAsync();
     // Explore the result
-    // console.log(result);
+    console.log(result);
     if (!result.cancelled) {
-      setAdoptionForm({ ...adoptionForm, 'petPictures': result.uri})
-      // console.log(result); //result.uri is the route of the image
+      // Verify if the extension is an image, else show a error
+      if(result.type === 'image') {
+        setAdoptionForm({ ...adoptionForm, 'image': result.uri})
+        // console.log(result); //result.uri is the route of the image
+      } else{
+        setError(true)
+        setErrorMessage('Solo puedes subir archivos de imagen!')
+      }
     }
   }
   // This function is triggered when the "Te voy a buscar" button pressed
@@ -218,15 +250,79 @@ const PetForm = () => {
       // console.log(`lat: ${adoptionForm.latitude}, long: ${adoptionForm.longitude}, marker: ${adoptionForm.marker}, city: ${adoptionForm.petCity}`)
   };
 
+  // this functions send the data 
+  const sendData = async () => {
+    
+    const fileURL = adoptionForm.image;
+    const cleanURL = fileURL.replace("file://", "");
+
+    const data = new FormData();
+    data.append('petPictures', { uri: fileURL, name:'petpicture.jpg', type: 'image/jpg'});
+    data.append('petName', adoptionForm.petName);
+    data.append('petSpecie', adoptionForm.petSpecie);
+    data.append('month', adoptionForm.month);
+    data.append('year', adoptionForm.year);
+    data.append('petSize', adoptionForm.petSize);
+    data.append('petSex', adoptionForm.petSex);
+    data.append('petBreed', adoptionForm.petBreed);
+    data.append('petDescription', adoptionForm.petDescription);
+    data.append('petCity', adoptionForm.petCity);
+    data.append('latitude', adoptionForm.latitude);
+    data.append('longitude', adoptionForm.longitude);
+    data.append('name', adoptionForm.name);
+    data.append('number', adoptionForm.number);
+    data.append('whatsapp', adoptionForm.whatsapp);
+    data.append('petVaccines', adoptionForm.petVaccines);
+    data.append('petSterilized', adoptionForm.petSterilized);
+    data.append('postType', adoptionForm.postType);
+
+    setAdoptionForm({ ...adoptionForm, 'petPictures': cleanURL})
+    const url = `https://adoptapy.herokuapp.com/api/adoptions`;
+    // const response = await axios({
+    //   url,
+    //   method: 'POST',
+    //   data: adoptionForm,
+    // }).then(function (response) {
+    //   // handle success
+    //   console.log(response);
+    // })
+    // .catch(function (error) {
+    //   // handle error
+    //   console.log(error);
+    // })
+    // console.log('data enviada')
+    // console.log(response)
+    fetch(url, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    body: data
+  })
+    .then(response => response.json())
+    .then(response => {
+      // console.log(adoptionForm)
+      console.log("upload succes", response);
+      alert("Upload success!");
+      resetState()
+      setLoading(false)
+    })
+    .catch(error => {
+      console.log("upload error", error);
+      alert("Upload failed!");
+      setLoading(false)
+    });
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Component ProgressStep */}
-      <ProgressSteps 
+        <ProgressSteps 
         activeStepIconBorderColor={config.colorTitle}
         activeLabelColor={config.colorTitle}
         activeStepNumColor={config.colorTitle}
-        completedProgressBarColor={config.colorTitle2}
-        completedStepIconColor={config.colorTitle2}
+        completedProgressBarColor={config.green}
+        completedStepIconColor={config.green}
       >
         {/* Screen per step */}
         <ProgressStep 
@@ -417,8 +513,8 @@ const PetForm = () => {
             <View style={{ paddingVertical: 12}}>
               <Button onPress={showImagePicker} title={`Sube una imagen de ${adoptionForm.petName}`} color={config.colorTitle} />
                   {
-                    adoptionForm.petPictures !== null && <Image
-                      source={{ uri: adoptionForm.petPictures }}
+                    adoptionForm.image !== null && <Image
+                      source={{ uri: adoptionForm.image }}
                       style={{    
                       alignSelf: 'center',
                       height: 350, 
@@ -485,7 +581,7 @@ const PetForm = () => {
               />
               <TextInput 
                 style={styles.input}
-                value={adoptionForm.number}
+                value={(adoptionForm.number).toString()}
                 keyboardType='numeric'
                 keyboardAppearance='default'
                 maxLength={10}
@@ -508,11 +604,12 @@ const PetForm = () => {
           </View>
         </ProgressStep>
       </ProgressSteps>
-    
+      {/* set a loading indicator when the submit button is pressed */}
+      <Loader loading={loading} />
     </ScrollView>
   )
 }
-
+// Style from form component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -600,6 +697,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     marginVertical: 10
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  loadingHorizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
   }
 })
 
