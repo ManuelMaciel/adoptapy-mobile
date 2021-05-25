@@ -28,7 +28,7 @@ import Loader from '../Loader/Loader';
 // Get the dimension width from the screen/window
 const width = Dimensions.get('window').width
 
-const PetForm = () => {
+const PetForm = ({ navigation }) => {
   // save the data from the inputs
   const [ adoptionForm, setAdoptionForm ] = useState({
     petName: '',
@@ -305,6 +305,7 @@ const PetForm = () => {
       console.log("upload succes", response);
       alert("Upload success!");
       resetState()
+      navigation.navigate('NewPosts')
       setLoading(false)
     })
     .catch(error => {

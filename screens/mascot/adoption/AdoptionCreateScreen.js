@@ -2,9 +2,9 @@ import React, { useState} from 'react';
 import { View, TextInput, Button, ScrollView, StyleSheet, Text } from 'react-native'
 import PetForm from '../../../components/Form/PetForm';
 
-const AdoptionCreateScreen = () => {
+const AdoptionCreateScreen = ({ navigation }) => {
   return (
-    <PetForm />
+    <PetForm navigation={navigation} />
   )
 }
 
