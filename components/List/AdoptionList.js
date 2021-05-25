@@ -58,6 +58,7 @@ const AdoptionList = ({ petCategoryIndex, navigation }) => {
     setLoading(true)
     getData()
     console.log(`page changed ${page}`)
+    console.log(`end page ${endPage}`)
     return () => {
     }
   }, [page])
@@ -134,7 +135,7 @@ const AdoptionList = ({ petCategoryIndex, navigation }) => {
           keyExtractor={( item ) => item._id.toString()}
           ListFooterComponent={Loading}
           onEndReached={handleLoadMore}
-          onEndReachedThreshold={0}
+          onEndReachedThreshold={0.01}
         />
       </View>
       {/* } */}

@@ -9,13 +9,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Linking from 'expo-linking';
 // Expo Maps
 import MapView, { Marker } from 'react-native-maps';
+import { format, render, cancel, register } from 'timeago.js';
 
 const width = Dimensions.get('window').width - 50
 
 const PetDetails = ({ route, navigation }) => {
   // Extract the prop from the adoption list 
   const { item  } = route.params;
-  console.log(item)
   // function to send message in whatsapp 
   function whatsapp() {
     Linking.openURL(`whatsapp://send?text=Hola%2C%20te%20escribo%20por%20tu%20post%20en%20AdoptaPY%20sobre%20la%20adopción%20de%20${item.petData.petName}.&phone=595${item.petContact.number}`)
@@ -46,6 +46,7 @@ const PetDetails = ({ route, navigation }) => {
             <Image style={styles.image} resizeMode='contain' source={{uri: item.petData.petPictures[0]}}></Image>
           </View>
       </View>
+      <Text style={{ paddingTop: 5, paddingHorizontal: 10, color: config.colorTitle, fontWeight: 'bold', textAlign: 'center'}}>Se publicó {format(item.date, 'en_US')}</Text>
       <View style={styles.descriptionContainer}>
         <View style={{ flexDirection: 'row', marginBottom: 15, justifyContent: 'center' }}>
           {/* Sexo, Edad, Raza */}
