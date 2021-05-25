@@ -1,5 +1,5 @@
-import React, { useState} from 'react';
-import { View, TextInput, Button, ScrollView, StyleSheet, Text, Dimensions, Image, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, ScrollView, StyleSheet, Text, Dimensions, Image, Alert } from 'react-native'
 // Picker
 import {Picker} from '@react-native-picker/picker';
 // Multiple step library
@@ -28,7 +28,7 @@ import Loader from '../Loader/Loader';
 // Get the dimension width from the screen/window
 const width = Dimensions.get('window').width
 
-const PetForm = ({ navigation }) => {
+const PetForm = ({ navigation, type }) => {
   // save the data from the inputs
   const [ adoptionForm, setAdoptionForm ] = useState({
     petName: '',
@@ -79,7 +79,7 @@ const PetForm = ({ navigation }) => {
       petPictures: null,
     })
   }
-
+  const [ setting, setSettings ] = useState()
   // error states
   const [ error, setError ] = useState(false);
   const [ errorMessage, setErrorMessage ] = useState('');
@@ -249,13 +249,11 @@ const PetForm = ({ navigation }) => {
       // console.log();
       // console.log(`lat: ${adoptionForm.latitude}, long: ${adoptionForm.longitude}, marker: ${adoptionForm.marker}, city: ${adoptionForm.petCity}`)
   };
-
   // this functions send the data 
   const sendData = async () => {
     
     const fileURL = adoptionForm.image;
-    const cleanURL = fileURL.replace("file://", "");
-
+    // const cleanURL = fileURL.replace("file://", "");
     const data = new FormData();
     data.append('petPictures', { uri: fileURL, name:'petpicture.jpg', type: 'image/jpg'});
     data.append('petName', adoptionForm.petName);
@@ -276,8 +274,8 @@ const PetForm = ({ navigation }) => {
     data.append('petSterilized', adoptionForm.petSterilized);
     data.append('postType', adoptionForm.postType);
 
-    setAdoptionForm({ ...adoptionForm, 'petPictures': cleanURL})
-    const url = `https://adoptapy.herokuapp.com/api/adoptions`;
+    // setAdoptionForm({ ...adoptionForm, 'petPictures': cleanURL})
+    const url = `https://adoptapy.herokuapp.com/api/${type}`;
     // const response = await axios({
     //   url,
     //   method: 'POST',
@@ -303,7 +301,7 @@ const PetForm = ({ navigation }) => {
     .then(response => {
       // console.log(adoptionForm)
       console.log("upload succes", response);
-      alert("Upload success!");
+      createAlertPublish()
       resetState()
       navigation.navigate('NewPosts')
       setLoading(false)
@@ -314,14 +312,47 @@ const PetForm = ({ navigation }) => {
       setLoading(false)
     });
   };
+  // this functions verify the prop type and asign colors to progress step
+  const checkType = () => {
+    if(type === 'adoptions'){
+      setSettings(config.colorTitle)
+    } else if(type === 'lost'){
+      setSettings(config.colorTitle3)
+    } else if(type === 'found'){
+      setSettings(config.colorTitle2)
+    }
+  }
+  // Alert
+  const createAlertPublish = () =>
+    Alert.alert(
+      `${adoptionForm.petName}`,
+      "Su publicacion fue exitosa",
+      [
+        {
+          text: "Ok",
+          onPress: () => console.log("Ask me later pressed")
+        },
+        // {
+        //   text: "Cancel",
+        //   onPress: () => console.log("Cancel Pressed"),
+        //   style: "cancel"
+        // },
+        // { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    );
+  // this effect, restart the data and set color for all progress step component
+  useEffect(() => {
+    resetState()
+    checkType()
+  }, [type])
 
   return (
     <ScrollView style={styles.container}>
       {/* Component ProgressStep */}
         <ProgressSteps 
-        activeStepIconBorderColor={config.colorTitle}
-        activeLabelColor={config.colorTitle}
-        activeStepNumColor={config.colorTitle}
+        activeStepIconBorderColor={setting}
+        activeLabelColor={setting}
+        activeStepNumColor={setting}
         completedProgressBarColor={config.green}
         completedStepIconColor={config.green}
       >
@@ -363,7 +394,7 @@ const PetForm = ({ navigation }) => {
                   <Picker.Item label="Gato" value="gato" />
                   <Picker.Item label="Otro" value="otro" />
                 </Picker>
-                <SimpleLineIcons name="arrow-down" size={19} color={config.colorTitle} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
+                <SimpleLineIcons name="arrow-down" size={19} color={setting} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
               </View>
             </View>
             <View>
@@ -380,7 +411,7 @@ const PetForm = ({ navigation }) => {
                   <Picker.Item label="Mediano" value="mediano" />
                   <Picker.Item label="Grande" value="grande" />
                 </Picker>
-                <SimpleLineIcons name="arrow-down" size={19} color={config.colorTitle} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
+                <SimpleLineIcons name="arrow-down" size={19} color={setting} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
               </View>
             </View>
             <View>
@@ -396,7 +427,7 @@ const PetForm = ({ navigation }) => {
                   <Picker.Item label="Macho" value="macho" />
                   <Picker.Item label="Hembra" value="hembra" />
                 </Picker>
-                <SimpleLineIcons name="arrow-down" size={19} color={config.colorTitle} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
+                <SimpleLineIcons name="arrow-down" size={19} color={setting} style={{ position: 'absolute', alignSelf: 'flex-end', paddingHorizontal: 10}}  />
               </View>
             </View>
             <View>
@@ -429,50 +460,55 @@ const PetForm = ({ navigation }) => {
           scrollable={true}
         >
           <View style={styles.inputGroup}>
-          {/* Month */}
-            <Text style={styles.label}>¿Cuantos meses tiene {adoptionForm.petName}?</Text>
-            <View style={{ alignItems: 'center', paddingVertical: 5}}>
-              <NumericInput 
-                value={adoptionForm.month} 
-                minValue={0}
-                maxValue={11}
-                step={1}
-                borderColor={config.colorTitle}
-                onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                totalWidth={140} 
-                totalHeight={50} 
-                iconSize={20}
-                valueType='real'
-                rounded={true}
-                textColor={config.colorDescription} 
-                iconStyle={{ color: 'white' }} 
-                rightButtonBackgroundColor={config.colorTitle} 
-                leftButtonBackgroundColor={config.colorTitle}
-                onChange={value => handleChangeText('month', value)} 
-              />
+            {type === 'adoptions'
+            ? //Month and year checker
+            <View>
+              <Text style={styles.label}>¿Cuantos meses tiene {adoptionForm.petName}?</Text>
+              <View style={{ alignItems: 'center', paddingVertical: 5}}>
+                <NumericInput 
+                  value={adoptionForm.month} 
+                  minValue={0}
+                  maxValue={11}
+                  step={1}
+                  borderColor={setting}
+                  onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                  totalWidth={140} 
+                  totalHeight={50} 
+                  iconSize={20}
+                  valueType='real'
+                  rounded={true}
+                  textColor={config.colorDescription} 
+                  iconStyle={{ color: 'white' }} 
+                  rightButtonBackgroundColor={setting} 
+                  leftButtonBackgroundColor={setting}
+                  onChange={value => handleChangeText('month', value)} 
+                />
+              </View>
+              <Text style={styles.label}>¿Cuantos años tiene {adoptionForm.petName}?</Text>
+              <View style={{ alignItems: 'center', paddingVertical: 5}}>
+                <NumericInput 
+                  value={adoptionForm.year} 
+                  minValue={0}
+                  maxValue={30}
+                  step={1}
+                  borderColor={setting}
+                  totalWidth={140} 
+                  totalHeight={50} 
+                  iconSize={20}
+                  valueType='real'
+                  rounded={true}
+                  textColor={config.colorDescription} 
+                  iconStyle={{ color: 'white' }} 
+                  rightButtonBackgroundColor={setting} 
+                  leftButtonBackgroundColor={setting}
+                  onChange={value => handleChangeText('year', value)} 
+                  onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                />
+              </View>
             </View>
-            {/* Year */}
-            <Text style={styles.label}>¿Cuantos años tiene {adoptionForm.petName}?</Text>
-            <View style={{ alignItems: 'center', paddingVertical: 5}}>
-              <NumericInput 
-                value={adoptionForm.year} 
-                minValue={0}
-                maxValue={30}
-                step={1}
-                borderColor={config.colorTitle}
-                totalWidth={140} 
-                totalHeight={50} 
-                iconSize={20}
-                valueType='real'
-                rounded={true}
-                textColor={config.colorDescription} 
-                iconStyle={{ color: 'white' }} 
-                rightButtonBackgroundColor={config.colorTitle} 
-                leftButtonBackgroundColor={config.colorTitle}
-                onChange={value => handleChangeText('year', value)} 
-                onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-              />
-            </View>
+            : 
+              null
+            }
             {/* Checkboxes */}
             <View style={{ flexDirection: 'column'}}>
               {/* Vaccines */}
@@ -483,7 +519,7 @@ const PetForm = ({ navigation }) => {
                   value={adoptionForm.petVaccines}
                   onValueChange={(value) => handleChangeText('petVaccines', value)}
                   // tintColors={{ true: 'red, false: 'yellow' }}
-                  tintColors={{ true: config.colorTitle, false: config.colorDescription }}
+                  tintColors={{ true: setting, false: config.colorDescription }}
                 />
               </View>
                 {/* Sterilized */}
@@ -493,7 +529,7 @@ const PetForm = ({ navigation }) => {
                   disabled={false}
                   value={adoptionForm.petSterilized}
                   onValueChange={(value) => handleChangeText('petSterilized', value)}
-                  tintColors={{ true: config.colorTitle, false: config.colorDescription }}
+                  tintColors={{ true: setting, false: config.colorDescription }}
                 />
               </View>
             </View>
@@ -512,7 +548,7 @@ const PetForm = ({ navigation }) => {
               />
             </View>
             <View style={{ paddingVertical: 12}}>
-              <Button onPress={showImagePicker} title={`Sube una imagen de ${adoptionForm.petName}`} color={config.colorTitle} />
+              <Button onPress={showImagePicker} title={`Sube una imagen de ${adoptionForm.petName}`} color={setting} />
                   {
                     adoptionForm.image !== null && <Image
                       source={{ uri: adoptionForm.image }}
@@ -562,13 +598,13 @@ const PetForm = ({ navigation }) => {
                 >
                 {adoptionForm.marker
                   ?
-                    <MapView.Marker coordinate={{latitude: adoptionForm.latitude ,longitude: adoptionForm.longitude}} pinColor = {config.colorTitle2} />
+                    <MapView.Marker coordinate={{latitude: adoptionForm.latitude ,longitude: adoptionForm.longitude}} pinColor = {setting} />
                   :
                     null
                 }
               </MapView>
             </View>
-            <Button onPress={getLocation} title="Te voy a buscar" color={config.colorTitle} />
+            <Button onPress={getLocation} title="Te voy a buscar" color={setting} />
             <View>
               <TextInput 
                 style={styles.input}
@@ -598,7 +634,7 @@ const PetForm = ({ navigation }) => {
                 value={adoptionForm.whatsapp}
                 onValueChange={(value) => handleChangeText('whatsapp', value)}
                 // tintColors={{ true: 'red, false: 'yellow' }}
-                tintColors={{ true: config.colorTitle, false: config.colorDescription }}
+                tintColors={{ true: setting, false: config.colorDescription }}
               />
             </View>
             {error ? <Text style={styles.error}>{errorMessage}</Text> : null}
@@ -639,7 +675,7 @@ const styles = StyleSheet.create({
   },
   psBtnText: {
     fontWeight: '600',
-    // color: config.colorTitle,
+    // color: setting,
     color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center'

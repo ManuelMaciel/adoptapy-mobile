@@ -18,6 +18,8 @@ import MainScreen from './MainScreen';
 import PetDetails from '../components/PetDetails/PetDetails'
 // New Post Screen
 import NewPosts from './NewPost';
+// Create Post Screen
+import AdoptionCreateScreen from './mascot/adoption/AdoptionCreateScreen'
 // Shelters Screen
 import Shelters from './Shelters';
 // Stack Navigator
@@ -44,6 +46,7 @@ function PostScreenStack() {
   return (
     <Stack.Navigator headerMode='none'>
       <Stack.Screen name='NewPosts' component={NewPosts} />
+      <Stack.Screen name='CreatePost' component={AdoptionCreateScreen} />
     </Stack.Navigator>
   )
 }
