@@ -10,11 +10,10 @@ import * as Linking from 'expo-linking';
 // Expo Maps
 import MapView, { Marker } from 'react-native-maps';
 import { format, render, cancel, register } from 'timeago.js';
-import { dateformat } from 'dateformat-mm'
 
 const width = Dimensions.get('window').width - 50
 
-const PetDetails = ({ route, navigation }) => {
+const PetRescueDetails = ({ route, navigation }) => {
   // Extract the prop from the adoption list 
   const { item  } = route.params;
   // function to send message in whatsapp 
@@ -55,10 +54,6 @@ const PetDetails = ({ route, navigation }) => {
             <View style={styles.minicard}>
               <Text style={styles.minicardTitle}>Sexo</Text>
               <Text style={styles.minicardSubTitle}>{capitalize(item.petData.petSex)}</Text>
-            </View>
-            <View style={styles.minicard}>
-              <Text style={styles.minicardTitle}>Edad</Text>
-              <Text style={styles.minicardSubTitle}>{item.petData.petAge.year == 0 ? <Text>{item.petData.petAge.month} Meses</Text> : <Text>{item.petData.petAge.year} Años</Text>}</Text>
             </View>
             <View style={styles.minicard}>
               <Text style={styles.minicardTitle}>Raza</Text>
@@ -254,4 +249,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PetDetails
+export default PetRescueDetails

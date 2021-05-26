@@ -20,8 +20,12 @@ import PetDetails from '../components/PetDetails/PetDetails'
 import NewPosts from './NewPost';
 // Create Post Screen
 import AdoptionCreateScreen from './mascot/adoption/AdoptionCreateScreen'
+// Pet List
+import PetListScreen from './PetListScreen';
 // Shelters Screen
 import Shelters from './Shelters';
+// PetRescueDetails
+import PetRescueDetails from '../components/PetDetails/PetRescueDetails'
 // Stack Navigator
 const Stack = createStackNavigator();
 
@@ -51,10 +55,19 @@ function PostScreenStack() {
   )
 }
 
+function PetScreenStack() {
+  return (
+    <Stack.Navigator headerMode='none'>
+      <Stack.Screen name='PetOptions' component={PetListScreen} />
+    </Stack.Navigator>
+  )
+}
+
 function ShelterScreenStack() {
   return (
     <Stack.Navigator headerMode='none'>
       <Stack.Screen name='Shelters' component={Shelters} />
+      <Stack.Screen name='PetRescueDetails' component={PetRescueDetails} />
     </Stack.Navigator>
   )
 }
@@ -103,6 +116,15 @@ function TabStack() {
               style={{position: 'absolute'}}
             >
               <MaterialCommunityIcons name="heart-plus-outline" size={30} color={focused ? config.colorTitle : config.colorNoFocused} />
+            </View>
+          )
+        }}/>
+        <Tab.Screen name='PetOptionScreen' component={PetScreenStack} options={{ 
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{position: 'absolute'}}
+            >
+              <MaterialCommunityIcons name="bone" size={30} color={focused ? config.colorTitle : config.colorNoFocused} />
             </View>
           )
         }}/>
