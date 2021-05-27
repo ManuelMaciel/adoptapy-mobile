@@ -1,21 +1,14 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions, SafeAreaView } from "react-native";
-// navigation
 import { useNavigation } from '@react-navigation/native';
-// config
 import config from '../utils/config'
-// Material Icons
 import { MaterialIcons } from '@expo/vector-icons';
-
 // Get the dimension width from the screen/window
 const width = Dimensions.get('window').width - 70
 
 const NewPosts = () => {
-
   const navigation = useNavigation();
-  
   return (
-    // <AdoptionCreateScreen navigation={navigation} />
     <SafeAreaView style={{ flex: 1, paddingHorizontal: 20, backgroundColor: '#fff' }}>
       {/* Header */}
       <View style={styles.header}>

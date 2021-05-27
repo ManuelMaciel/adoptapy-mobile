@@ -1,41 +1,33 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions, SafeAreaView } from "react-native";
-// navigation
 import { useNavigation } from '@react-navigation/native';
-// config
 import config from '../utils/config'
-// Material Icons
 import { MaterialIcons } from '@expo/vector-icons';
-
 // Get the dimension width from the screen/window
 const width = Dimensions.get('window').width - 70
-
 const PetListScreen = () => {
-
   const navigation = useNavigation();
-  
   return (
-    // <AdoptionCreateScreen navigation={navigation} />
     <SafeAreaView style={{ flex: 1, paddingHorizontal: 20, backgroundColor: '#fff' }}>
       {/* Header */}
       <View style={styles.header}>
         {/* Title */}
         <View>
-          <MaterialIcons name='post-add' size={40} color={config.colorTitle} />
+          <MaterialIcons name='search' size={40} color={config.colorTitle} />
           <Text style={styles.title}>Navega en las busquedas</Text>
         </View>
       </View>
       <View style={styles.center}>
         {/* Adoption */}
-        <TouchableOpacity style={[styles.button, { backgroundColor: config.colorTitle}]} onPress={() => navigation.navigate('CreatePost', {type: 'adoptions'})}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: config.colorTitle}]} onPress={() => navigation.navigate('PetSearch', {type: 'adoptions', title: 'en adopción'})}>
           <Text style={{ color: 'white'}}>Mascotas en adopcion.</Text>
         </TouchableOpacity>
         {/* Lost */}
-        <TouchableOpacity style={[styles.button, { backgroundColor: config.colorTitle3}]} onPress={() => navigation.navigate('CreatePost', {type: 'lost'})}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: config.colorTitle3}]} onPress={() => navigation.navigate('PetSearch', {type: 'lost', title: 'perdidas'})}>
           <Text style={{ color: 'white'}}>Mascotas perdidas</Text>
         </TouchableOpacity>
         {/* Found */}
-        <TouchableOpacity style={[styles.button, { backgroundColor: config.colorTitle2}]} onPress={() => navigation.navigate('CreatePost', {type: 'found'})}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: config.colorTitle2}]} onPress={() => navigation.navigate('PetSearch', {type: 'found', title: 'encontradas'})}>
           <Text style={{ color: 'white'}}>Mascotas encontradas</Text>
         </TouchableOpacity>
         {/* Rescue */}

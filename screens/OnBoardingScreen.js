@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-// My Componentes Import
 import OnBoarding from '../components/SliderMenu/OnBoarding'
 import HomeScreen from './HomeScreen';
-// React Navigations
 import { useNavigation } from '@react-navigation/native';
 
 const Loading = () => {
@@ -17,13 +15,10 @@ const Loading = () => {
 }
 
 const OnBoardingScreen = () => {
-
   const navigation = useNavigation();
-
   const checkOnBoarding = async () => {
     try {
       const value = await AsyncStorage.getItem('@viewedOnBoarding');
-  
       if(value !== null) {
         setViewedOnBoarding(true);
       }
@@ -33,14 +28,11 @@ const OnBoardingScreen = () => {
       setLoading(false)
     }
   }
-
   const [ loading, setLoading ] = useState(true);
   const [ viewedOnBoarding, setViewedOnBoarding ] = useState(false);
-
   useEffect(() => {
     checkOnBoarding();
   }, [])
-
   return (
     <> 
     <StatusBar style='dark' />
@@ -49,9 +41,7 @@ const OnBoardingScreen = () => {
     </View>
     </>
   );
-
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

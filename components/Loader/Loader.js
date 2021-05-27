@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, ActivityIndicator, Dimensions } from 'react-native';
 import config from '../../utils/config'
 
-const Loader = ({ loading }) => {
+const Loader = ({ loading, type }) => {
   return (
     loading 
     ?
@@ -14,7 +14,7 @@ const Loader = ({ loading }) => {
         justifyContent: 'center',
         alignItems: 'center'}} 
       >
-        <ActivityIndicator size="large" color={config.colorTitle} />
+        <ActivityIndicator size="large" color={type === 'rescue' ? config.colorTitle2 : config.colorTitle} />
       </View> 
     : 
       null

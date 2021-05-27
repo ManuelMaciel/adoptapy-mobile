@@ -1,21 +1,35 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-native'
-// config
 import config from '../../utils/config';
-// Material icons
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// Linking
 import * as Linking from 'expo-linking';
-// Expo Maps
 import MapView, { Marker } from 'react-native-maps';
-import { format, render, cancel, register } from 'timeago.js';
+import { format } from 'timeago.js';
+import Loader from '../Loader/Loader';
+import axios from 'axios';
 
 const width = Dimensions.get('window').width - 50
 
 const PetRescueDetails = ({ route, navigation }) => {
   // Extract the prop from the adoption list 
-  const { item  } = route.params;
+  const { item } = route.params;
+  const [ creator, setCreator ] = useState(null)
+  const [ loading, setLoading ] = useState(false);
+
+  const getDataCreator = async () => {
+    const url = `https://adoptapy.herokuapp.com/api/rescues/${item._id}`;
+    const response = await axios.get(url)
+    setCreator(response.data.data.postCreator)
+    setLoading(false)
+    console.log(response.data.data.postCreator)
+    console.log(creator)
+  };
+
+  useEffect(() => {
+    setLoading(true)
+    getDataCreator()
+  }, [item])
   // function to send message in whatsapp 
   function whatsapp() {
     Linking.openURL(`whatsapp://send?text=Hola%2C%20te%20escribo%20por%20tu%20post%20en%20AdoptaPY%20sobre%20la%20adopción%20de%20${item.petData.petName}.&phone=595${item.petContact.number}`)
@@ -32,12 +46,11 @@ const PetRescueDetails = ({ route, navigation }) => {
               .map( v => v[0].toUpperCase() + v.substr(1) )
               .join(' ');  
   }
-  
 
   return (
     <ScrollView style={styles.screenDetails}>
       <View style={styles.header}>
-        <MaterialCommunityIcons name='arrow-left-bold' size={32} color={config.colorTitle} onPress={() => navigation.goBack()} />
+        <MaterialCommunityIcons name='arrow-left-bold' size={32} color={config.colorTitle2} onPress={() => navigation.goBack()} />
         <MaterialCommunityIcons name='heart-circle' size={32} color={config.colorIcon} />
       </View>
       <View style={styles.imageContainer}>
@@ -46,7 +59,7 @@ const PetRescueDetails = ({ route, navigation }) => {
             <Image style={styles.image} resizeMode='contain' source={{uri: item.petData.petPictures[0]}}></Image>
           </View>
       </View>
-      <Text style={{ paddingTop: 5, paddingHorizontal: 10, color: config.colorTitle, fontWeight: 'bold', textAlign: 'center'}}>Se publicó {format(item.date, 'en_US')}</Text>
+      <Text style={{ paddingTop: 5, paddingHorizontal: 10, color: config.colorTitle2, fontWeight: 'bold', textAlign: 'center'}}>Se publicó {format(item.date, 'en_US')}</Text>
       <View style={styles.descriptionContainer}>
         <View style={{ flexDirection: 'row', marginBottom: 15, justifyContent: 'center' }}>
           {/* Sexo, Edad, Raza */}
@@ -91,12 +104,6 @@ const PetRescueDetails = ({ route, navigation }) => {
         </View>
         <View style={styles.mapContainer}>
           {/* Mapa y ciudad */}
-          {/* <Marker 
-          style={styles.map} 
-          coordinate={{ latitude : item.petData.petLocation.latitude , longitude : item.petData.petLocation.longitude }}
-          image={{uri: 'custom_pin'}}
-          /> */}
-
         <MapView
           style={styles.map}
           initialRegion={{
@@ -114,7 +121,7 @@ const PetRescueDetails = ({ route, navigation }) => {
         </MapView>
 
         </View>
-        <Text style={{ marginHorizontal: 10, fontSize: 20, color: config.colorTitle }}>¿Te interesa {capitalize(item.petData.petName)}?</Text>
+        <Text style={{ marginHorizontal: 10, fontSize: 20, color: config.colorTitle2 }}>¿Te interesa {capitalize(item.petData.petName)}?</Text>
         <View style={{ flexDirection: 'row', marginBottom: 50, justifyContent: 'space-between', marginTop: 10}}>
           {/* Contacto */}
           <View>
@@ -137,6 +144,7 @@ const PetRescueDetails = ({ route, navigation }) => {
           }
         </View>
       </View>
+      <Loader loading={loading} type='rescue' />
     </ScrollView>
   )
 }
@@ -211,7 +219,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    color: config.colorTitle,
+    color: config.colorTitle2,
     paddingBottom: 5,
   },
   descriptionContent: {

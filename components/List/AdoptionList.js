@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Button, ScrollView, StyleSheet, ActivityIndicator, Dimensions, TouchableOpacity, Image } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, Dimensions, TouchableOpacity, Image } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler';
-// Axios
 import axios from 'axios';
-// FontAwesome5 Icons
 import { FontAwesome5 } from '@expo/vector-icons'; 
-// config
 import config from '../../utils/config';
 
 const width = Dimensions.get('screen').width/2-30
@@ -23,23 +20,14 @@ const AdoptionList = ({ petCategoryIndex, navigation }) => {
     const response = await axios.get(url)
     setData(data.concat(response.data.data.docs))
     setEndPage(response.data.data.totalPages)
-    // fetch(url).then((res) => res.json())
-    //   .then((resJson) => {
-    //     setData(resJson);
-    //   })
     setLoading(false)
   };
 
   const handleLoadMore = () => {
     if(page === endPage){
-      console.log(`page : ${page}`)
-      console.log(`endPage: ${endPage}`)
-      console.log(`-------`)
       setLoading(false)
     } else {
       setPage(page + 1)
-      console.log(`page: ${page}`)
-      console.log(`--------`)
     }
   }
 
@@ -47,18 +35,13 @@ const AdoptionList = ({ petCategoryIndex, navigation }) => {
     setData([])
     setEndPage()
     setPage(0)
-    console.log(`data: ${data}, endPage: ${endPage}, page: ${page}`)
-    console.log(`pet category changed to ${petCategoryIndex}`)
     return () => {
-      console.log('clean')
     }
   }, [petCategoryIndex])
 
   useEffect(() => {
     setLoading(true)
     getData()
-    console.log(`page changed ${page}`)
-    console.log(`end page ${endPage}`)
     return () => {
     }
   }, [page])
@@ -72,7 +55,6 @@ const AdoptionList = ({ petCategoryIndex, navigation }) => {
   }
 
   const Card = ({ item }) => {
-    // console.log(item)
     return (
       <View style={styles.card}>
         <TouchableOpacity onPress={() => navigation.navigate('PetDetails', {item: item})}>
@@ -119,8 +101,6 @@ const AdoptionList = ({ petCategoryIndex, navigation }) => {
 
   return (
     <>
-      {/* {loading ? <Loading /> 
-      : */}
       <View >
         <FlatList 
           columnWrapperStyle={{ justifyContent: 'space-between' }}
@@ -158,8 +138,7 @@ const styles = StyleSheet.create({
       height: 1,
     },
     shadowOpacity: 0.18,
-    shadowRadius: 1.00,
-    
+    shadowRadius: 1.00,    
     elevation: 1,
   },
   image: {

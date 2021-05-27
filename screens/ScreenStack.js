@@ -1,31 +1,21 @@
 import React from 'react';
-// React Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// MaterialDesign Icons
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-// import { FontAwesome5 } from '@expo/vector-icons'; 
-// config
 import config from '../utils/config';
-// Main App Screens Stack
 import OnBoardingScreen from './OnBoardingScreen';
 import HomeScreen from './HomeScreen';
 import MainScreen from './MainScreen';
-// Pet Details Component
 import PetDetails from '../components/PetDetails/PetDetails'
-// New Post Screen
+import PetAllDetails from '../components/PetDetails/PetAllDetails'
 import NewPosts from './NewPost';
-// Create Post Screen
 import AdoptionCreateScreen from './mascot/adoption/AdoptionCreateScreen'
-// Pet List
 import PetListScreen from './PetListScreen';
-// Shelters Screen
 import Shelters from './Shelters';
-// PetRescueDetails
 import PetRescueDetails from '../components/PetDetails/PetRescueDetails'
+import PetSearch from '../components/Search/PetSearch';
 // Stack Navigator
 const Stack = createStackNavigator();
 
@@ -36,7 +26,6 @@ function OnBoardingScreenStack() {
     </Stack.Navigator>
   )
 }
-
 function MainScreenStack() {
   return (
     <Stack.Navigator headerMode='none'>
@@ -45,7 +34,6 @@ function MainScreenStack() {
     </Stack.Navigator>
   )
 }
-
 function PostScreenStack() {
   return (
     <Stack.Navigator headerMode='none'>
@@ -54,15 +42,15 @@ function PostScreenStack() {
     </Stack.Navigator>
   )
 }
-
 function PetScreenStack() {
   return (
     <Stack.Navigator headerMode='none'>
       <Stack.Screen name='PetOptions' component={PetListScreen} />
+      <Stack.Screen name='PetSearch' component={PetSearch} />
+      <Stack.Screen name='PetAllDetails' component={PetAllDetails} />
     </Stack.Navigator>
   )
 }
-
 function ShelterScreenStack() {
   return (
     <Stack.Navigator headerMode='none'>
@@ -71,7 +59,6 @@ function ShelterScreenStack() {
     </Stack.Navigator>
   )
 }
-  
 // Tab Navigator
 const Tab = createBottomTabNavigator();
 
@@ -133,7 +120,7 @@ function TabStack() {
             <View
               style={{position: 'absolute'}}
             >
-              <MaterialCommunityIcons name="hand-heart" size={30} color={focused ? config.colorTitle : config.colorNoFocused} />
+              <MaterialCommunityIcons name="hand-heart" size={30} color={focused ? config.colorTitle2 : config.colorNoFocused} />
             </View>
           )
         }}/>
@@ -145,10 +132,8 @@ function TabStack() {
 const AppStack = () => {
   return (
     <Stack.Navigator headerMode='none'>
-      
       <Stack.Screen name='TabStack' component={TabStack} /> 
       <Stack.Screen name='OnBoardingScreenStack' component={OnBoardingScreenStack} /> 
-      
     </Stack.Navigator>
   )
 }

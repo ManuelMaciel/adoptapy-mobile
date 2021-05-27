@@ -9,12 +9,12 @@ import { format } from 'timeago.js';
 
 const width = Dimensions.get('window').width - 50
 
-const PetDetails = ({ route, navigation }) => {
+const PetAllDetails = ({ route, navigation }) => {
   // Extract the prop from the adoption list 
   const { item, type  } = route.params;
   // function to send message in whatsapp 
   function whatsapp() {
-    Linking.openURL(`whatsapp://send?text=Hola%2C%20te%20escribo%20por%20tu%20post%20en%20AdoptaPY%20sobre%20la%20adopción%20de%20${item.petData.petName}.&phone=595${item.petContact.number}`)
+    Linking.openURL(`whatsapp://send?text=Hola%2C%20te%20escribo%20por%20tu%20post%20en%20AdoptaPY%20sobre%20${item.petData.petName}.&phone=595${item.petContact.number}`)
   }
   // function to open the call app 
   function call() {
@@ -109,8 +109,17 @@ const PetDetails = ({ route, navigation }) => {
             title={`Es la ubicacion de ${item.petData.petName}`}
           />
         </MapView>
+
         </View>
-        <Text style={{ marginHorizontal: 10, fontSize: 20, color: config.colorTitle }}>¿Te interesa {capitalize(item.petData.petName)}?</Text>
+        <Text style={{ marginHorizontal: 10, fontSize: 20, color: config.colorTitle }}>
+          {type === 'lost' ?
+            <Text>¿Encontraste a {capitalize(item.petData.petName)}?</Text>
+          : type === 'found' ?
+            <Text>¿{capitalize(item.petData.petName)} es tu mascota?</Text>
+          : 
+            <Text>¿Te interesa {capitalize(item.petData.petName)}?</Text>
+          }
+        </Text>
         <View style={{ flexDirection: 'row', marginBottom: 50, justifyContent: 'space-between', marginTop: 10}}>
           {/* Contacto */}
           <View>
@@ -245,4 +254,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PetDetails
+export default PetAllDetails

@@ -1,26 +1,26 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import RescueList from '../components/List/RescueList';
-import { useNavigation } from '@react-navigation/native';
+import PetList from '../List/PetList';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import config from '../utils/config';
+import config from '../../utils/config';
 
-const Shelter = () => {
-  const navigation = useNavigation()
+const PetSearch = ({ route, navigation }) => {
+  const { type, title  } = route.params;
   const [ petCategoryIndex, setPetCategoryIndex ] = useState('Perro')
   const categories = [
     {title: 'Perro', icon: 'dog'},
     {title: 'Gato', icon: 'cat'},
     {title: 'Otro', icon: 'rabbit'}
   ]
+
   const CategoryList = () => {
     return (
       <View style={styles.categories}>
         {categories.map((category, index) => (
           <View style={{ paddingRight: 10}} key={index}>
             <TouchableOpacity onPress={() => setPetCategoryIndex(category.title)} style={[styles.button, petCategoryIndex == category.title && styles.buttonSelected]}>
-              <MaterialCommunityIcons name={category.icon} size={29} color={petCategoryIndex == category.title ? config.white : config.colorTitle2} />
+              <MaterialCommunityIcons name={category.icon} size={29} color={petCategoryIndex == category.title ? config.white : config.colorTitle} />
               <Text style={[styles.buttonText, , petCategoryIndex == category.title && styles.buttonTextSelected]}>{category.title}</Text>
             </TouchableOpacity>
           </View>
@@ -30,25 +30,21 @@ const Shelter = () => {
   }
   return (
     <SafeAreaView style={{ flex: 1, paddingHorizontal: 20, backgroundColor: '#fff' }}>
+      <MaterialCommunityIcons name='arrow-left-bold' size={32} color={config.colorTitle} onPress={() => navigation.goBack()} />
       {/* Header */}
-      <View style={styles.header}>
-        {/* Title */}
-        <View>
-          <MaterialCommunityIcons name='charity' size={40} color={config.colorTitle2} />
-          <Text style={styles.title}>Ayuda a mascotas</Text>
-          <Text style={styles.subtitle}>rescatadas</Text>
-        </View>
-      </View>
+      <Text style={styles.subtitle}>Mascotas {title}</Text>
       {/* Categories */}
       <CategoryList />
-      {/* Rescue List */}
-      <RescueList 
+      {/* List of animals */}
+      <PetList 
         petCategoryIndex={petCategoryIndex}
         navigation={navigation}
+        type={type}
       />
     </SafeAreaView>
   )
 }
+
 const styles = StyleSheet.create({
   header: {
     marginTop: 30,
@@ -64,7 +60,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: config.colorTitle2,
+    color: config.colorTitle,
   },
   categories: {
     marginTop: 30,
@@ -89,7 +85,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   buttonSelected: {
-    backgroundColor: config.colorTitle2,
+    backgroundColor: config.colorTitle,
     paddingHorizontal: 15,
     paddingVertical: 7,
     borderRadius: 10,
@@ -115,7 +111,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: config.white,
     textAlign: 'center',
-  }
+  },
+  subtitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: config.colorTitle,
+  },
 })
 
-export default Shelter
+export default PetSearch
